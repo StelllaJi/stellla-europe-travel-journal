@@ -19,13 +19,16 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="shell">
+    <main class="game-shell">
       <header class="topbar">
-        <div>
+        <div class="brand-lockup">
           <p class="eyebrow">A LITTLE LIFE IN EUROPE</p>
           <h1>stellla 的欧洲旅行手记</h1>
         </div>
-        <button class="icon-button" id="albumButton" aria-label="打开回忆册">回忆册 <span id="albumCount">0</span></button>
+        <div class="topbar-actions">
+          <button class="icon-button compact" id="introButton" aria-label="查看游戏介绍">?</button>
+          <button class="icon-button" id="albumButton" aria-label="打开回忆册">回忆册 <span id="albumCount">0</span></button>
+        </div>
       </header>
 
       <section class="scene" id="scene">
@@ -34,52 +37,70 @@
         <div class="scene-copy">
           <p class="scene-kicker" id="sceneKicker">LUXEMBOURG · HOME</p>
           <h2 id="sceneTitle">今天要替小狗准备什么？</h2>
-          <p id="sceneText">选一份法甜和一张鸡尾酒灵感卡。它会自己决定去哪里，也可能带回一段没预料到的生活。</p>
+          <p id="sceneText">西高地正在家里等你。准备好行囊后，它会自己决定下一站。</p>
+        </div>
+        <div class="home-actions" id="homeActions">
+          <button class="primary-button" id="prepareButton">准备一次旅行</button>
+          <small>选择一份法甜与一张旅行灵感卡</small>
         </div>
       </section>
 
-      <section class="status-card" id="statusCard" hidden>
-        <div>
-          <p class="label">旅行状态</p>
-          <p class="status-title" id="statusTitle">小狗已经出发</p>
-        </div>
-        <div class="timer" id="timer">59:59</div>
-      </section>
-
-      <section id="packingPanel">
-        <div class="section-heading">
+      <section class="game-panel packing-panel" id="packingPanel" hidden>
+        <div class="panel-header">
           <div>
+            <p class="label">PACK THE SATCHEL</p>
+            <h2>替小狗准备行囊</h2>
+          </div>
+          <button class="icon-button" id="closePacking">返回房间</button>
+        </div>
+        <div class="loadout-board">
+          <section class="loadout-group">
             <p class="label">01 · PÂTISSERIE</p>
-            <h3>带一份法甜</h3>
-          </div>
-          <p>它影响小狗偏爱的路线</p>
+            <h3>先选一份法甜</h3>
+            <p>它会改变小狗偏爱的路线。</p>
+            <div class="choice-grid" id="pastryChoices"></div>
+          </section>
+          <section class="loadout-group">
+            <p class="label">02 · TRAVEL MOOD</p>
+            <h3>再挑一张鸡尾酒灵感卡</h3>
+            <p>小狗不会喝酒；它只带走这张卡的气质。</p>
+            <div class="choice-grid" id="cocktailChoices"></div>
+          </section>
         </div>
-        <div class="choice-grid" id="pastryChoices"></div>
-
-        <div class="section-heading second">
-          <div>
-            <p class="label">02 · BAR CABINET</p>
-            <h3>挑一张鸡尾酒灵感卡</h3>
-          </div>
-          <p>它影响照片的气质与事件</p>
+        <div class="panel-footer">
+          <button class="primary-button" id="departButton" disabled>请先收拾行囊</button>
         </div>
-        <div class="choice-grid" id="cocktailChoices"></div>
-
-        <button class="primary-button" id="departButton" disabled>请先收拾行囊</button>
       </section>
 
       <section class="journey-panel" id="journeyPanel" hidden>
-        <div class="section-heading">
+        <section class="status-card" id="statusCard" hidden>
           <div>
-            <p class="label">POSTCARDS</p>
-            <h3>旅途中寄来的消息</h3>
+            <p class="label">旅行状态</p>
+            <p class="status-title" id="statusTitle">小狗已经出发</p>
           </div>
+          <div class="timer" id="timer">00:59</div>
+        </section>
+        <div class="journey-heading">
+          <div><p class="label">POSTBOX</p><h3>等待旅途来信</h3></div>
           <p id="journeyHint">下一封信还在路上</p>
         </div>
         <div class="postcard-list" id="postcardList"></div>
-        <button class="secondary-button" id="resetButton">重新体验这次旅行</button>
+        <div class="journey-actions">
+          <button class="secondary-button" id="resetButton">结束本次旅行</button>
+        </div>
       </section>
     </main>
+
+    <dialog class="intro-dialog" id="introDialog">
+      <div class="intro-art" role="img" aria-label="西高地在 stellla 的欧洲房间里"></div>
+      <div class="intro-copy">
+        <p class="label">WELCOME TO STELLLA'S LITTLE EUROPE</p>
+        <h2>这只西高地，收藏着 stellla 的美丽记忆</h2>
+        <p>它会替 stellla 回到卢森堡、Nancy、Trier 和 Amsterdam 的生活片段里。你只需要准备一份法甜和一张旅行灵感卡，然后等它寄回明信片、便签与沿途拾到的小东西。</p>
+        <p>你不能替它选择目的地——记忆会自己找到回来的路。</p>
+        <button class="primary-button" id="enterGameButton">进入小狗的房间</button>
+      </div>
+    </dialog>
 
     <dialog class="album" id="albumDialog">
       <div class="album-header">

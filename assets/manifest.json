@@ -13,6 +13,8 @@
   "fragmentSheet": "generated/travel-fragments-sheet-v1.png",
   "fragmentDirectory": "fragments/",
   "finalInvitation": "generated/final-invitation-v1.png",
+  "awayHome": "generated/home-room-away-v1.png",
+  "postcardEnvelope": "generated/postcard-envelope-v1.png",
   "postcards": {
     "lux-hamilius": "generated/postcard-lux-hamilius-v1.png",
     "lux-liquid": "generated/postcard-lux-liquid-bar-v1.png",

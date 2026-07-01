@@ -3,7 +3,17 @@
   const durationMs = data.tripDurationSeconds * 1000;
   const postcardOffsets = data.postcardSeconds.map(seconds => seconds * 1000);
   const storageKey = "little-dog-europe-v1";
+  const introStorageKey = "stellla-europe-intro-seen-v1";
   const $ = id => document.getElementById(id);
+  const locationLabels = {
+    Luxembourg: "卢森堡 · Luxembourg City",
+    Dudelange: "卢森堡 · Dudelange",
+    Kockelscheuer: "卢森堡 · Kockelscheuer",
+    Belval: "卢森堡 · Belval",
+    Nancy: "法国 · Nancy",
+    Trier: "德国 · Trier",
+    Amsterdam: "荷兰 · Amsterdam"
+  };
 
   const elements = {
     art: $("sceneArt"), kicker: $("sceneKicker"), title: $("sceneTitle"), text: $("sceneText"),
@@ -14,7 +24,8 @@
     fragmentGrid: $("fragmentGrid"), shopGrid: $("shopGrid"),
     collectionProgress: $("collectionProgress"), finalePanel: $("finalePanel"),
     inviteDialog: $("inviteDialog"), shareStatus: $("shareStatus"),
-    postcardDialog: $("postcardDialog"), postcardDialogContent: $("postcardDialogContent")
+    postcardDialog: $("postcardDialog"), postcardDialogContent: $("postcardDialogContent"),
+    homeActions: $("homeActions"), introDialog: $("introDialog")
   };
 
   let state = loadState();
@@ -43,6 +54,21 @@
   }
 
   function saveState() { localStorage.setItem(storageKey, JSON.stringify(state)); }
+
+  function formatLocation(memory) {
+    return locationLabels[memory.city] || memory.city;
+  }
+
+  function openPacking() {
+    elements.homeActions.hidden = true;
+    elements.journey.hidden = true;
+    elements.packing.hidden = false;
+  }
+
+  function closePacking() {
+    elements.packing.hidden = true;
+    elements.homeActions.hidden = false;
+  }
 
   function isUnlocked(item) {
     return !item.unlockCost || state.unlockedItems.includes(item.id);
@@ -161,8 +187,10 @@
     const secs = Math.floor((remaining % 60000) / 1000);
 
     elements.packing.hidden = true;
+    elements.homeActions.hidden = true;
     elements.journey.hidden = false;
     elements.status.hidden = false;
+    elements.art.classList.add("away");
     elements.timer.textContent = progress.returned ? "已回家" : `${String(mins).padStart(2,"0")}:${String(secs).padStart(2,"0")}`;
     elements.statusTitle.textContent = progress.returned ? "小狗回来了，还带着新的碎片" : `带着 ${pastry.name} 与 ${cocktail.name} 旅行中`;
     elements.kicker.textContent = progress.returned ? "WELCOME HOME" : "SOMEWHERE IN EUROPE";
@@ -177,7 +205,7 @@
       return isOpened ? `
         <article class="postcard">
           <div class="postcard-image" style="background-image:url('${memory.art}')"></div>
-          <div class="postcard-copy"><span class="label">${memory.city} · ${role}</span><strong>${memory.title}</strong><p>${memory.text}</p></div>
+          <div class="postcard-copy"><span class="label">${formatLocation(memory)} · ${role}</span><strong>${memory.title}</strong><p>${memory.text}</p></div>
         </article>` : hasArrived ? `
         <article class="postcard arrived-card">
           <div class="postcard-image envelope-pattern"><span>✉</span></div>
@@ -248,7 +276,7 @@
       <article class="postcard-reveal">
         <div class="postcard-reveal-art" style="background-image:url('${memory.art}')"></div>
         <div class="postcard-reveal-copy">
-          <span class="label">${memory.city} · FROM THE ROAD</span>
+          <span class="label">${formatLocation(memory)} · FROM THE ROAD</span>
           <h2>${memory.title}</h2><p>${memory.text}</p>
           <button class="primary-button" data-close-postcard>收进回忆册</button>
         </div>
@@ -282,7 +310,7 @@
     elements.albumGrid.innerHTML = memories.length ? memories.map(memory => `
       <article class="postcard">
         <div class="postcard-image" style="background-image:url('${memory.art}')"></div>
-        <div class="postcard-copy"><span class="label">${memory.city}</span><strong>${memory.title}</strong><p>${memory.text}</p></div>
+        <div class="postcard-copy"><span class="label">${formatLocation(memory)}</span><strong>${memory.title}</strong><p>${memory.text}</p></div>
       </article>`).join("") : `<p class="album-empty">回忆册还是空的。先送小狗出一次门吧。</p>`;
     elements.fragmentGrid.innerHTML = data.fragments.map(fragment => {
       const count = state.fragments?.[fragment.id] || 0;
@@ -368,9 +396,14 @@
     if (state.trip) {
       renderTrip();
     } else {
-      elements.packing.hidden = false;
+      elements.packing.hidden = true;
       elements.journey.hidden = true;
       elements.status.hidden = true;
+      elements.homeActions.hidden = false;
+      elements.art.classList.remove("away");
+      elements.kicker.textContent = "LUXEMBOURG · HOME";
+      elements.title.textContent = "西高地今天还在家";
+      elements.text.textContent = "它替 stellla 收藏着那些美丽的欧洲记忆。准备好行囊以后，它会自己决定下一站。";
     }
   }
 
@@ -378,6 +411,8 @@
   renderChoices(data.cocktails, elements.cocktail, "cocktail");
   elements.pastry.addEventListener("click", selectChoice);
   elements.cocktail.addEventListener("click", selectChoice);
+  $("prepareButton").addEventListener("click", openPacking);
+  $("closePacking").addEventListener("click", closePacking);
   elements.depart.addEventListener("click", beginJourney);
   $("resetButton").addEventListener("click", resetTrip);
   elements.albumButton.addEventListener("click", () => { renderAlbum(); elements.albumDialog.showModal(); });
@@ -388,8 +423,14 @@
   elements.finalePanel.addEventListener("click", openInvite);
   $("closeInvite").addEventListener("click", () => elements.inviteDialog.close());
   $("shareButton").addEventListener("click", shareGame);
+  $("introButton").addEventListener("click", () => elements.introDialog.showModal());
+  $("enterGameButton").addEventListener("click", () => {
+    localStorage.setItem(introStorageKey, "yes");
+    elements.introDialog.close();
+  });
 
   checkSceneArt();
   render();
+  if (!localStorage.getItem(introStorageKey)) elements.introDialog.showModal();
   setInterval(() => { if (state.trip) renderTrip(); }, 1000);
 })();

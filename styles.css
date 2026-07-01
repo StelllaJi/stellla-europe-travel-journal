@@ -6,305 +6,339 @@
   --sage: #a9baa8;
   --wine: #8f3f49;
   --gold: #c89a50;
-  --line: rgba(32, 51, 44, 0.14);
-  --shadow: 0 18px 60px rgba(35, 44, 37, 0.12);
+  --line: rgba(32, 51, 44, .15);
+  --glass: rgba(255, 250, 240, .88);
+  --shadow: 0 24px 80px rgba(25, 36, 31, .2);
 }
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-
+html, body { width: 100%; height: 100%; overflow: hidden; }
 body {
   margin: 0;
   color: var(--ink);
-  background:
-    radial-gradient(circle at 15% 0%, rgba(200, 154, 80, 0.13), transparent 28rem),
-    var(--paper);
+  background: #182822;
   font-family: "Nunito", "Noto Serif SC", sans-serif;
-  overscroll-behavior-y: none;
+  overscroll-behavior: none;
   -webkit-tap-highlight-color: transparent;
 }
-
 button { font: inherit; }
-
-.shell {
-  width: min(100% - 32px, 860px);
-  margin: 0 auto;
-  padding: max(28px, env(safe-area-inset-top)) 0 calc(64px + env(safe-area-inset-bottom));
-}
-
-.topbar, .section-heading, .status-card, .album-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
 h1, h2, h3, p { margin: 0; }
-h1 { font: 700 clamp(24px, 5vw, 34px)/1.2 "Noto Serif SC", serif; }
-h2 { font: 700 clamp(28px, 6vw, 48px)/1.18 "Noto Serif SC", serif; }
-h3 { font: 700 24px/1.25 "Noto Serif SC", serif; }
+h1 { font: 700 clamp(20px, 3.2vw, 31px)/1.2 "Noto Serif SC", serif; }
+h2 { font: 700 clamp(28px, 5vw, 48px)/1.18 "Noto Serif SC", serif; }
+h3 { font: 700 clamp(18px, 2.6vw, 24px)/1.25 "Noto Serif SC", serif; }
 
 .eyebrow, .label, .scene-kicker {
   margin-bottom: 5px;
   color: var(--wine);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.17em;
+  letter-spacing: .17em;
+  text-transform: uppercase;
 }
 
+.game-shell {
+  position: relative;
+  width: min(100%, 1280px);
+  height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  isolation: isolate;
+  background: #4e6157;
+  box-shadow: 0 0 100px rgba(0,0,0,.35);
+}
+
+.topbar {
+  position: absolute;
+  z-index: 20;
+  top: max(18px, env(safe-area-inset-top));
+  left: clamp(18px, 4vw, 46px);
+  right: clamp(18px, 4vw, 46px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  color: white;
+  filter: drop-shadow(0 2px 12px rgba(0,0,0,.35));
+}
+.brand-lockup { min-width: 0; }
+.topbar .eyebrow { color: #f0c787; }
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
 .icon-button {
-  border: 1px solid var(--line);
+  min-height: 42px;
+  border: 1px solid rgba(255,255,255,.3);
   border-radius: 999px;
-  padding: 10px 14px;
-  color: var(--ink);
-  background: rgba(255, 250, 240, 0.72);
+  padding: 9px 13px;
+  color: inherit;
+  background: rgba(24,40,34,.45);
+  box-shadow: 0 7px 24px rgba(0,0,0,.12);
+  backdrop-filter: blur(14px);
   cursor: pointer;
 }
-
+.icon-button.compact { min-width: 42px; padding-inline: 0; font-weight: 900; }
 .icon-button span {
   display: inline-grid;
   place-items: center;
-  min-width: 22px;
-  height: 22px;
+  min-width: 21px;
+  height: 21px;
   margin-left: 4px;
   border-radius: 50%;
   color: white;
   background: var(--wine);
 }
 
-.scene {
-  position: relative;
-  min-height: 510px;
-  margin: 26px 0 22px;
-  overflow: hidden;
-  border-radius: 32px;
-  color: white;
-  box-shadow: var(--shadow);
-  background: #6f8174;
-}
-
+.scene { position: absolute; inset: 0; overflow: hidden; color: white; background: #63766b; }
 .scene-art {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(135deg, rgba(34, 61, 51, 0.3), rgba(143, 63, 73, 0.2)),
-    url("assets/generated/home-room-v1.png");
+  background-image: linear-gradient(135deg, rgba(34,61,51,.18), rgba(143,63,73,.08)), url("assets/generated/home-room-v1.png");
   background-size: cover;
   background-position: center;
+  transition: opacity .45s ease, filter .45s ease;
 }
-
-.scene-art.no-art::after {
-  content: "首张 Imagen 场景画将在角色设定后放入这里";
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 40px;
-  color: rgba(255,255,255,.72);
-  text-align: center;
-  background: linear-gradient(145deg, #6f8174, #344a42 58%, #8f5d59);
+.scene-art.away {
+  background-image: linear-gradient(135deg, rgba(34,61,51,.26), rgba(50,66,72,.15)), url("assets/generated/home-room-away-v1.png");
 }
-
-.scene-shade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 28%, rgba(18, 31, 27, 0.76) 100%);
-}
-
+.scene-art.no-art::after { content: "场景插画载入中"; position: absolute; inset: 0; display: grid; place-items: center; background: #53675c; }
+.scene-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,20,15,.28), transparent 28%, rgba(12,24,20,.84) 100%); }
 .scene-copy {
   position: absolute;
-  left: clamp(24px, 6vw, 52px);
-  right: clamp(24px, 6vw, 52px);
-  bottom: clamp(28px, 7vw, 54px);
-  max-width: 660px;
+  z-index: 2;
+  left: clamp(22px, 5vw, 64px);
+  right: clamp(22px, 5vw, 64px);
+  bottom: clamp(118px, 17vh, 170px);
+  max-width: 690px;
 }
-
-.scene-copy > p:last-child {
-  max-width: 590px;
-  margin-top: 14px;
-  color: rgba(255,255,255,.82);
-  font: 400 16px/1.8 "Noto Serif SC", serif;
+.scene-copy .scene-kicker { color: #f1c98c; }
+.scene-copy > p:last-child { max-width: 590px; margin-top: 13px; color: rgba(255,255,255,.82); font: 400 15px/1.75 "Noto Serif SC", serif; }
+.home-actions {
+  position: absolute;
+  z-index: 3;
+  left: clamp(22px, 5vw, 64px);
+  bottom: calc(clamp(22px, 4vh, 42px) + env(safe-area-inset-bottom));
+  width: min(390px, calc(100% - 44px));
 }
-
-.status-card {
-  margin: 0 0 22px;
-  padding: 20px 24px;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  background: var(--cream);
-}
-
-.status-title { font: 600 18px/1.4 "Noto Serif SC", serif; }
-.timer { color: var(--wine); font-size: 30px; font-weight: 800; font-variant-numeric: tabular-nums; }
-
-.section-heading { margin: 34px 0 16px; }
-.section-heading.second { margin-top: 44px; }
-.section-heading > p { max-width: 240px; color: var(--muted); text-align: right; font-size: 13px; }
-
-.choice-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.choice-card {
-  position: relative;
-  min-height: 232px;
-  padding: 0;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  color: var(--ink);
-  text-align: left;
-  background: rgba(255, 250, 240, 0.75);
-  cursor: pointer;
-  transition: transform .2s ease, border-color .2s ease, background .2s ease;
-}
-
-.choice-card:hover { transform: translateY(-3px); }
-.choice-card.selected { border-color: var(--wine); background: #fff8ed; box-shadow: 0 0 0 2px rgba(143,63,73,.1); }
-.choice-card.locked-choice { cursor: not-allowed; filter: saturate(.35); opacity: .62; }
-.choice-card.locked-choice:hover { transform: none; }
-.choice-art { display: block; aspect-ratio: 1.45 / 1; overflow: hidden; background: radial-gradient(circle at 50% 45%, #fffaf0, #eadfc9); }
-.choice-art img { display: block; width: 100%; height: 100%; padding: 7px; object-fit: contain; transition: transform .35s ease; }
-.choice-card:hover .choice-art img { transform: scale(1.035); }
-.choice-copy { display: block; padding: 15px 17px 17px; }
-.choice-card strong { display: block; margin-bottom: 5px; font: 600 16px/1.35 "Noto Serif SC", serif; }
-.choice-card small { color: var(--muted); line-height: 1.45; }
+.home-actions .primary-button { margin: 0; }
+.home-actions small { display: block; margin-top: 9px; color: rgba(255,255,255,.68); text-align: center; }
 
 .primary-button, .secondary-button {
-  width: 100%;
-  margin-top: 28px;
-  padding: 17px 24px;
-  border: 0;
-  border-radius: 16px;
+  min-height: 52px;
+  padding: 14px 22px;
+  border-radius: 15px;
   font-weight: 800;
   cursor: pointer;
 }
-
-.primary-button { color: white; background: var(--ink); box-shadow: var(--shadow); }
+.primary-button { width: 100%; border: 0; color: white; background: linear-gradient(135deg, #263f35, #172a23); box-shadow: 0 14px 36px rgba(15,30,24,.26); }
 .primary-button:disabled { opacity: .35; cursor: not-allowed; }
-.secondary-button { color: var(--ink); background: transparent; border: 1px solid var(--line); }
+.secondary-button { border: 1px solid var(--line); color: var(--ink); background: rgba(255,250,240,.72); }
 
-.postcard-list { display: grid; gap: 16px; }
-.postcard {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  min-height: 150px;
+.game-panel {
+  position: absolute;
+  z-index: 30;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: max(24px, env(safe-area-inset-top)) clamp(18px, 4vw, 46px) calc(18px + env(safe-area-inset-bottom));
+  background: radial-gradient(circle at 85% 0%, rgba(200,154,80,.16), transparent 32rem), var(--paper);
+  animation: panel-in .35s cubic-bezier(.2,.8,.2,1);
+}
+.panel-header { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 14px; }
+.panel-header .icon-button { color: var(--ink); border-color: var(--line); background: rgba(255,250,240,.72); box-shadow: none; }
+.loadout-board { min-height: 0; flex: 1; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+.loadout-group { min-width: 0; min-height: 0; display: flex; flex-direction: column; padding: 18px; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: rgba(255,250,240,.68); box-shadow: 0 12px 35px rgba(40,50,42,.06); }
+.loadout-group > p:not(.label) { margin: 6px 0 13px; color: var(--muted); font-size: 12px; }
+.choice-grid { min-height: 0; flex: 1; display: flex; gap: 10px; overflow-x: auto; overflow-y: hidden; padding: 2px 2px 10px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+.choice-card {
+  flex: 0 0 clamp(145px, 18vw, 184px);
+  min-height: 0;
+  padding: 0;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 20px;
-  background: var(--cream);
-}
-.postcard-image { background: linear-gradient(140deg, var(--sage), #455f54); background-size: cover; background-position: center; }
-.postcard-copy { padding: 22px; }
-.postcard-copy strong { display: block; margin: 4px 0 9px; font: 600 19px/1.35 "Noto Serif SC", serif; }
-.postcard-copy p { color: var(--muted); line-height: 1.65; }
-.postcard.locked { opacity: .56; filter: grayscale(.5); }
-.arrived-card { border-color: rgba(200,154,80,.58); box-shadow: 0 12px 35px rgba(85,62,27,.08); }
-.envelope-pattern { display: grid; place-items: center; background: repeating-linear-gradient(135deg, #f7e8c7 0 12px, #eed8aa 12px 24px); }
-.envelope-pattern span { font-size: 42px; filter: sepia(1); }
-.arrived-card button { margin-top: 13px; padding: 8px 13px; border: 0; border-radius: 999px; color: white; background: var(--wine); font-weight: 800; cursor: pointer; }
-.travel-note { position: relative; padding: 25px 28px 24px 42px; overflow: hidden; border: 1px solid rgba(200,154,80,.38); border-radius: 7px 18px 18px 7px; background: #fff8df; box-shadow: 0 10px 30px rgba(60,48,25,.08); transform: rotate(-.35deg); }
-.travel-note::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 18px; background: repeating-linear-gradient(180deg, transparent 0 14px, rgba(143,63,73,.22) 14px 16px); }
-.travel-note p { font: 600 17px/1.75 "Noto Serif SC", serif; }
-
-.album {
-  width: min(100% - 32px, 850px);
-  max-height: 86vh;
-  padding: 26px;
-  border: 0;
-  border-radius: 26px;
+  border-radius: 17px;
   color: var(--ink);
-  background: var(--paper);
-  box-shadow: var(--shadow);
+  text-align: left;
+  background: rgba(255,250,240,.9);
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
-.album::backdrop { background: rgba(15, 28, 23, .7); backdrop-filter: blur(5px); }
-.album-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 24px; }
-.album-empty { grid-column: 1 / -1; padding: 60px 20px; color: var(--muted); text-align: center; }
-.collection-progress { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 24px; }
-.collection-progress div { display: flex; justify-content: space-between; align-items: center; padding: 13px 15px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,250,240,.62); }
-.collection-progress span { color: var(--muted); font-size: 13px; }
+.choice-card:hover { transform: translateY(-3px); }
+.choice-card.selected { border-color: var(--wine); box-shadow: 0 0 0 2px rgba(143,63,73,.12), 0 12px 26px rgba(63,39,38,.1); }
+.choice-card.locked-choice { opacity: .52; filter: saturate(.35); cursor: not-allowed; }
+.choice-art { display: block; aspect-ratio: 1.08; overflow: hidden; background: radial-gradient(circle at 50% 45%, #fffaf0, #e9ddc6); }
+.choice-art img { display: block; width: 100%; height: 100%; padding: 6px; object-fit: contain; transition: transform .3s ease; }
+.choice-card:hover img { transform: scale(1.035); }
+.choice-copy { display: block; padding: 11px 12px 13px; }
+.choice-card strong { display: block; margin-bottom: 4px; font: 600 14px/1.3 "Noto Serif SC", serif; }
+.choice-card small { display: block; color: var(--muted); font-size: 11px; line-height: 1.38; }
+.panel-footer { flex: 0 0 auto; display: flex; justify-content: center; padding-top: 14px; }
+.panel-footer .primary-button { width: min(520px, 100%); }
+
+.journey-panel {
+  position: absolute;
+  z-index: 24;
+  left: clamp(14px, 3vw, 36px);
+  right: clamp(14px, 3vw, 36px);
+  bottom: calc(clamp(14px, 3vw, 30px) + env(safe-area-inset-bottom));
+  max-height: 47dvh;
+  padding: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 24px;
+  background: rgba(246,240,227,.9);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+  animation: hud-in .38s ease;
+}
+.status-card { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 11px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 15px; background: rgba(255,250,240,.72); }
+.status-title { font: 600 14px/1.35 "Noto Serif SC", serif; }
+.timer { color: var(--wine); font-size: 23px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.journey-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 9px; }
+.journey-heading > p { color: var(--muted); font-size: 12px; }
+.postcard-list { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; }
+.journey-panel .postcard { display: grid; grid-template-columns: 74px 1fr; min-width: 0; min-height: 82px; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--cream); }
+.journey-panel .postcard-image { min-height: 82px; background-size: cover; background-position: center; }
+.journey-panel .postcard-copy { min-width: 0; padding: 9px; }
+.journey-panel .postcard-copy strong { display: block; margin-top: 3px; overflow: hidden; font: 600 12px/1.3 "Noto Serif SC", serif; text-overflow: ellipsis; white-space: nowrap; }
+.journey-panel .postcard-copy p { display: none; }
+.journey-panel .postcard-copy .label { font-size: 7px; letter-spacing: .1em; }
+.journey-panel .arrived-card button { margin-top: 7px; padding: 5px 8px; border: 0; border-radius: 999px; color: white; background: var(--wine); font-size: 10px; font-weight: 800; }
+.postcard.locked { opacity: .48; filter: grayscale(.6); }
+.envelope-pattern { display: grid; place-items: center; background: repeating-linear-gradient(135deg,#f7e8c7 0 10px,#eed8aa 10px 20px); }
+.envelope-pattern span { font-size: 28px; filter: sepia(1); }
+.travel-note { grid-column: 1 / -1; padding: 12px 15px 12px 28px; border: 1px solid rgba(200,154,80,.38); border-radius: 6px 14px 14px 6px; background: #fff8df; }
+.travel-note p { font: 600 12px/1.5 "Noto Serif SC", serif; }
+.journey-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+.journey-actions .secondary-button { min-height: 36px; padding: 7px 13px; font-size: 11px; }
+
+dialog { color: var(--ink); }
+dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
+.intro-dialog { width: min(calc(100% - 24px), 980px); height: min(calc(100dvh - 24px), 700px); padding: 0; overflow: hidden; border: 0; border-radius: 28px; background: var(--paper); box-shadow: 0 35px 120px rgba(0,0,0,.4); }
+.intro-dialog[open] { display: grid; grid-template-columns: 1.08fr .92fr; }
+.intro-art { background: linear-gradient(180deg, transparent 55%, rgba(20,34,29,.3)), url("assets/generated/home-room-v1.png") 60% center/cover; }
+.intro-copy { min-width: 0; display: flex; flex-direction: column; justify-content: center; padding: clamp(28px,5vw,58px); overflow-wrap: anywhere; }
+.intro-copy > p:not(.label) { margin-top: 15px; color: var(--muted); font: 400 15px/1.75 "Noto Serif SC", serif; }
+.intro-copy .primary-button { margin-top: 28px; }
+
+.album { width: min(100% - 24px, 900px); max-height: 90dvh; padding: 24px; overflow: auto; border: 0; border-radius: 26px; background: var(--paper); box-shadow: var(--shadow); }
+.album-header { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.album .icon-button { color: var(--ink); border-color: var(--line); background: var(--cream); box-shadow: none; }
+.collection-progress { display: grid; grid-template-columns: repeat(2,1fr); gap: 9px; margin-top: 20px; }
+.collection-progress div { display: flex; justify-content: space-between; padding: 12px 14px; border: 1px solid var(--line); border-radius: 13px; background: var(--cream); }
+.collection-progress span, .fragment-item small, .shop-copy small { color: var(--muted); font-size: 12px; }
 .collection-progress strong { color: var(--wine); }
-.fragment-heading { margin: 34px 0 14px; padding-top: 26px; border-top: 1px solid var(--line); }
-.fragment-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.fragment-item { display: flex; align-items: center; gap: 12px; padding: 10px; border: 1px solid var(--line); border-radius: 16px; opacity: .48; background: rgba(255,250,240,.62); }
+.album-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 11px; margin-top: 20px; }
+.album .postcard { display: grid; grid-template-columns: 130px 1fr; min-height: 132px; overflow: hidden; border: 1px solid var(--line); border-radius: 17px; background: var(--cream); }
+.postcard-image { background: linear-gradient(140deg,var(--sage),#455f54); background-size: cover; background-position: center; }
+.album .postcard-copy { padding: 17px; }
+.album .postcard-copy strong { display: block; margin: 4px 0 7px; font: 600 16px/1.35 "Noto Serif SC", serif; }
+.album .postcard-copy p { color: var(--muted); font-size: 13px; line-height: 1.55; }
+.album-empty { grid-column: 1/-1; padding: 50px 20px; color: var(--muted); text-align: center; }
+.fragment-heading { margin: 28px 0 12px; padding-top: 22px; border-top: 1px solid var(--line); }
+.fragment-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 9px; }
+.fragment-item { display: flex; align-items: center; gap: 11px; padding: 9px; border: 1px solid var(--line); border-radius: 14px; opacity: .48; background: var(--cream); }
 .fragment-item.owned { opacity: 1; border-color: rgba(200,154,80,.5); }
-.fragment-item img { width: 62px; height: 62px; border-radius: 12px; object-fit: cover; }
-.fragment-item strong, .fragment-item small { display: block; }
-.fragment-item strong { font-family: "Noto Serif SC", serif; }
-.fragment-item small { margin-top: 4px; color: var(--muted); }
-.shop-heading > p:last-child { margin-top: 7px; color: var(--muted); font-size: 13px; }
-.shop-grid { display: grid; gap: 10px; }
-.shop-item { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 14px; padding: 10px; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,250,240,.7); }
-.shop-item.unlocked { border-color: rgba(200,154,80,.5); }
-.shop-item > img { width: 72px; height: 72px; padding: 3px; border-radius: 12px; object-fit: contain; background: radial-gradient(circle, #fffaf0, #eadfc9); }
-.shop-copy strong, .shop-copy small { display: block; }
-.shop-copy strong { font-family: "Noto Serif SC", serif; }
-.shop-copy small { margin-top: 6px; color: var(--muted); }
-.shop-cost { display: inline-block; margin: 2px 8px 2px 0; }
+.fragment-item img { width: 58px; height: 58px; border-radius: 10px; object-fit: cover; }
+.fragment-item strong, .fragment-item small, .shop-copy strong, .shop-copy small { display: block; }
+.fragment-item strong, .shop-copy strong { font-family: "Noto Serif SC", serif; }
+.shop-heading > p:last-child { margin-top: 6px; color: var(--muted); font-size: 12px; }
+.shop-grid { display: grid; gap: 9px; }
+.shop-item { display: grid; grid-template-columns: 68px 1fr auto; align-items: center; gap: 12px; padding: 9px; border: 1px solid var(--line); border-radius: 14px; background: var(--cream); }
+.shop-item > img { width: 68px; height: 68px; padding: 3px; border-radius: 11px; object-fit: contain; background: radial-gradient(circle,#fffaf0,#eadfc9); }
+.shop-copy small { margin-top: 5px; }
+.shop-cost { display: inline-block; margin-right: 7px; }
 .shop-cost.ready { color: #52705e; font-weight: 800; }
-.shop-item button { min-width: 62px; padding: 9px 12px; border: 0; border-radius: 999px; color: white; background: var(--wine); font-weight: 800; cursor: pointer; }
-.shop-item button:disabled { color: var(--muted); background: #e2ddd2; cursor: not-allowed; }
-.finale-panel { min-height: 210px; margin-top: 34px; padding: 26px; border: 1px dashed rgba(32,51,44,.22); border-radius: 22px; display: grid; align-content: end; background: linear-gradient(140deg, rgba(169,186,168,.25), rgba(255,250,240,.7)); }
-.finale-panel h3 { margin-bottom: 9px; }
-.finale-panel p:last-child { color: var(--muted); line-height: 1.65; }
-.finale-panel.unlocked { min-height: 290px; color: white; border: 0; background: linear-gradient(180deg, rgba(20,34,29,.05), rgba(20,34,29,.82)), url("assets/generated/final-invitation-v1.png") center/cover; }
+.shop-item button { padding: 8px 11px; border: 0; border-radius: 999px; color: white; background: var(--wine); font-weight: 800; }
+.shop-item button:disabled { color: var(--muted); background: #e2ddd2; }
+.finale-panel { min-height: 200px; margin-top: 28px; padding: 24px; border: 1px dashed var(--line); border-radius: 19px; display: grid; align-content: end; background: linear-gradient(140deg,rgba(169,186,168,.25),var(--cream)); }
+.finale-panel p:last-child { margin-top: 7px; color: var(--muted); line-height: 1.55; }
+.finale-panel.unlocked { min-height: 280px; color: white; border: 0; background: linear-gradient(180deg,transparent,rgba(20,34,29,.84)),url("assets/generated/final-invitation-v1.png") center/cover; }
 .finale-panel.unlocked p:last-child { color: rgba(255,255,255,.8); }
-.finale-panel .primary-button { margin-top: 20px; }
-.invite-dialog { width: min(100% - 24px, 920px); padding: 0; overflow: hidden; border: 0; border-radius: 28px; color: white; background: #1f312b; box-shadow: var(--shadow); }
-.invite-dialog::backdrop { background: rgba(15,28,23,.82); backdrop-filter: blur(7px); }
-.invite-art { min-height: 70vh; background: linear-gradient(90deg, rgba(16,28,23,.12), rgba(16,28,23,.82)), url("assets/generated/final-invitation-v1.png") center/cover; }
-.invite-copy { position: absolute; right: clamp(24px,5vw,54px); top: 50%; width: min(42%, 360px); transform: translateY(-50%); }
-.invite-copy > p:not(.label) { margin-top: 16px; color: rgba(255,255,255,.82); font: 400 16px/1.8 "Noto Serif SC", serif; }
-.invite-copy small { display: block; min-height: 20px; margin-top: 10px; color: rgba(255,255,255,.72); }
-.invite-close { position: absolute; z-index: 2; top: 16px; right: 16px; padding: 9px 13px; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; color: white; background: rgba(20,34,29,.48); cursor: pointer; }
-.postcard-dialog { width: min(100% - 24px, 820px); padding: 0; overflow: hidden; border: 0; border-radius: 28px; color: var(--ink); background: var(--paper); box-shadow: 0 30px 100px rgba(15,28,23,.35); }
-.postcard-dialog::backdrop { background: rgba(15,28,23,.72); backdrop-filter: blur(8px); }
-.mail-arrival { min-height: 520px; display: grid; place-items: center; align-content: center; padding: 38px; text-align: center; background: radial-gradient(circle at 50% 42%, rgba(200,154,80,.18), transparent 18rem), var(--paper); }
-.mail-arrival > p:last-child { margin-top: 10px; color: var(--muted); }
-.sealed-envelope { position: relative; width: 230px; height: 150px; margin: 25px 0 30px; border: 1px solid #cfb989; border-radius: 5px; background: #f7e8c8; box-shadow: 0 24px 50px rgba(76,56,31,.18); cursor: pointer; transform: rotate(-2deg); transition: transform .25s ease; }
-.sealed-envelope:hover { transform: rotate(-1deg) translateY(-5px); }
-.envelope-flap { position: absolute; inset: 0; overflow: hidden; }
-.envelope-flap::before { content: ""; position: absolute; width: 164px; height: 164px; left: 32px; top: -84px; border: 1px solid #cfb989; background: #f1ddb5; transform: rotate(45deg); }
-.wax-seal { position: absolute; left: 50%; top: 58%; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: #f1c7aa; background: var(--wine); font: 700 18px/1 serif; transform: translate(-50%,-50%); box-shadow: inset 0 0 0 4px rgba(255,255,255,.08); }
+.finale-panel .primary-button { margin-top: 17px; }
+
+.invite-dialog { width: min(100% - 24px,920px); padding: 0; overflow: hidden; border: 0; border-radius: 26px; color: white; background: #1f312b; box-shadow: var(--shadow); }
+.invite-art { min-height: 70vh; background: linear-gradient(90deg,rgba(16,28,23,.1),rgba(16,28,23,.84)),url("assets/generated/final-invitation-v1.png") center/cover; }
+.invite-copy { position: absolute; right: clamp(24px,5vw,54px); top: 50%; width: min(42%,360px); transform: translateY(-50%); }
+.invite-copy > p:not(.label) { margin-top: 14px; color: rgba(255,255,255,.82); font: 400 15px/1.75 "Noto Serif SC", serif; }
+.invite-copy small { display: block; min-height: 20px; margin-top: 9px; color: rgba(255,255,255,.7); }
+.invite-close { position: absolute; z-index: 2; top: 14px; right: 14px; padding: 9px 12px; border: 1px solid rgba(255,255,255,.3); border-radius: 999px; color: white; background: rgba(20,34,29,.5); }
+
+.postcard-dialog { width: min(100% - 20px,820px); padding: 0; overflow: hidden; border: 0; border-radius: 26px; background: var(--paper); box-shadow: 0 35px 120px rgba(0,0,0,.38); }
+.mail-arrival { min-height: 520px; display: grid; place-items: center; align-content: center; padding: 34px; text-align: center; background: radial-gradient(circle at 50% 42%,rgba(200,154,80,.18),transparent 18rem),var(--paper); }
+.mail-arrival > p:last-child { margin-top: 9px; color: var(--muted); }
+.sealed-envelope { position: relative; width: 250px; height: 180px; margin: 20px 0 22px; padding: 0; border: 0; background: transparent url("assets/generated/postcard-envelope-v1.png") center/contain no-repeat; cursor: pointer; filter: drop-shadow(0 22px 24px rgba(64,44,25,.22)); transition: transform .25s ease; }
+.sealed-envelope:hover { transform: translateY(-5px) rotate(-1deg); }
+.envelope-flap, .wax-seal { display: none; }
 .postcard-reveal { display: grid; grid-template-columns: 1.25fr .75fr; min-height: 540px; background: var(--cream); animation: postcard-in .48s cubic-bezier(.2,.8,.2,1); }
 .postcard-reveal-art { min-height: 540px; background-position: center; background-size: cover; }
-.postcard-reveal-copy { display: flex; flex-direction: column; justify-content: center; padding: 38px; }
-.postcard-reveal-copy > p { margin-top: 15px; color: var(--muted); font: 400 16px/1.8 "Noto Serif SC", serif; }
-@keyframes postcard-in { from { opacity: 0; transform: translateY(30px) rotate(-1deg) scale(.96); } to { opacity: 1; transform: none; } }
+.postcard-reveal-copy { display: flex; flex-direction: column; justify-content: center; padding: 36px; }
+.postcard-reveal-copy > p { margin-top: 14px; color: var(--muted); font: 400 15px/1.75 "Noto Serif SC", serif; }
+.postcard-reveal-copy .primary-button { margin-top: 24px; }
 
-@media (max-width: 650px) {
-  .shell { width: min(100% - 22px, 860px); padding-top: 18px; }
-  .scene { min-height: 470px; border-radius: 24px; }
-  .choice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .section-heading > p { display: none; }
-  .postcard { grid-template-columns: 105px 1fr; }
-  .album-grid { grid-template-columns: 1fr; }
-  .fragment-grid { grid-template-columns: 1fr; }
-  .collection-progress { grid-template-columns: 1fr; }
-  .shop-item { grid-template-columns: 60px 1fr; }
-  .shop-item > img { width: 60px; height: 60px; }
-  .shop-item button { grid-column: 1 / -1; width: 100%; }
-  .invite-art { min-height: 78vh; background: linear-gradient(180deg, rgba(16,28,23,.05) 25%, rgba(16,28,23,.9) 72%), url("assets/generated/final-invitation-v1.png") 42% center/cover; }
-  .invite-copy { left: 24px; right: 24px; top: auto; bottom: 28px; width: auto; transform: none; }
-  .invite-copy h2 { font-size: 30px; }
-  .postcard-dialog { width: calc(100% - 14px); max-height: calc(100dvh - 14px); border-radius: 22px; }
-  .mail-arrival { min-height: min(620px, calc(100dvh - 14px)); padding: 26px 20px; }
-  .postcard-reveal { grid-template-columns: 1fr; min-height: calc(100dvh - 14px); }
-  .postcard-reveal-art { min-height: 52dvh; }
-  .postcard-reveal-copy { min-height: 38dvh; padding: 24px; justify-content: flex-start; }
+@keyframes panel-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes hud-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@keyframes postcard-in { from { opacity: 0; transform: translateY(28px) rotate(-1deg) scale(.96); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 720px) {
+  .topbar { align-items: flex-start; }
+  .brand-lockup h1 { max-width: 230px; font-size: 22px; }
+  .brand-lockup .eyebrow { font-size: 8px; }
+  .scene-art { background-position: 57% center; }
+  .scene-copy { bottom: 124px; }
+  .scene-copy h2 { font-size: 32px; }
+  .scene-copy > p:last-child { font-size: 13px; line-height: 1.65; }
+  .game-panel { padding-top: max(18px,env(safe-area-inset-top)); }
+  .panel-header h2 { font-size: 26px; }
+  .loadout-board { grid-template-columns: 1fr; gap: 9px; }
+  .loadout-group { padding: 12px; border-radius: 17px; }
+  .loadout-group > p:not(.label) { display: none; }
+  .choice-grid { min-height: 144px; }
+  .choice-card { flex-basis: 128px; }
+  .choice-art { aspect-ratio: 1.45; }
+  .choice-copy { padding: 8px 9px 10px; }
+  .choice-card small { display: none; }
+  .panel-footer { padding-top: 9px; }
+  .panel-footer .primary-button { min-height: 48px; }
+  .journey-panel { max-height: 48dvh; padding: 12px; border-radius: 19px; }
+  .postcard-list { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
+  .journey-panel .postcard { display: block; min-height: 118px; }
+  .journey-panel .postcard-image { height: 67px; min-height: 0; }
+  .journey-panel .postcard-copy { padding: 7px; }
+  .journey-panel .postcard-copy .label { display: none; }
+  .travel-note { padding: 10px 12px; }
+  .travel-note .label { display: none; }
+  .intro-dialog { width: calc(100% - 14px); height: calc(100dvh - 14px); border-radius: 21px; }
+  .intro-dialog[open] { grid-template-columns: 1fr; grid-template-rows: 42% 58%; }
+  .intro-copy { justify-content: flex-start; padding: 24px; overflow: auto; }
+  .intro-copy h2 { max-width: 100%; font-size: 28px; word-break: break-word; }
+  .intro-copy > p:not(.label) { margin-top: 10px; font-size: 13px; line-height: 1.62; }
+  .intro-copy .primary-button { margin-top: auto; }
+  .album { width: calc(100% - 14px); max-height: calc(100dvh - 14px); padding: 18px; border-radius: 21px; }
+  .album-grid, .fragment-grid, .collection-progress { grid-template-columns: 1fr; }
+  .album .postcard { grid-template-columns: 105px 1fr; }
+  .shop-item { grid-template-columns: 58px 1fr; }
+  .shop-item > img { width: 58px; height: 58px; }
+  .shop-item button { grid-column: 1/-1; width: 100%; }
+  .invite-art { min-height: 78vh; background: linear-gradient(180deg,rgba(16,28,23,.04) 25%,rgba(16,28,23,.92) 72%),url("assets/generated/final-invitation-v1.png") 42% center/cover; }
+  .invite-copy { left: 22px; right: 22px; top: auto; bottom: 24px; width: auto; transform: none; }
+  .invite-copy h2 { font-size: 29px; }
+  .postcard-dialog { width: calc(100% - 12px); max-height: calc(100dvh - 12px); border-radius: 20px; }
+  .mail-arrival { min-height: calc(100dvh - 12px); padding: 24px 18px; }
+  .postcard-reveal { grid-template-columns: 1fr; min-height: calc(100dvh - 12px); }
+  .postcard-reveal-art { min-height: 53dvh; }
+  .postcard-reveal-copy { min-height: 37dvh; padding: 22px; justify-content: flex-start; }
   .postcard-reveal-copy .primary-button { margin-top: auto; }
 }
 
-@media (max-width: 420px) {
-  .topbar { align-items: flex-start; }
-  h1 { max-width: 230px; font-size: 25px; }
-  .icon-button { padding: 9px 11px; }
-  .choice-card { min-height: 205px; }
-  .choice-copy { padding: 12px 13px 14px; }
-  .scene { min-height: 430px; }
-  .sealed-envelope { width: 205px; height: 134px; }
+@media (max-height: 690px) and (max-width: 720px) {
+  .brand-lockup .eyebrow { display: none; }
+  .topbar { top: max(10px,env(safe-area-inset-top)); }
+  .scene-copy { bottom: 106px; }
+  .scene-copy > p:last-child { display: none; }
+  .loadout-group h3 { font-size: 16px; }
+  .choice-grid { min-height: 116px; }
+  .choice-card { flex-basis: 112px; }
+  .choice-art { aspect-ratio: 1.7; }
 }
 
 @media (hover: none) {

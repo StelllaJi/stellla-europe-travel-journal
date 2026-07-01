@@ -29,6 +29,10 @@
 8. 正式版以后再把旅行时长改回约 1 小时。
 9. 用户主要生活区域是卢森堡，还去过 Nancy、Trier 和 Amsterdam。
 10. 游戏重点不是标准景点介绍，而是用户的独特生活细节与回忆杀。
+11. 首次打开必须有 Intro，明确说明西高地代表并收藏 stellla 的美丽记忆。
+12. 主游戏采用单一全屏游戏界面，不做需要纵向下拉的落地页；只有回忆册等弹窗内部允许滚动。
+13. 玩家必须先在房间主页点击“准备一次旅行”，才进入法甜与灵感卡选择。
+14. 小狗在家与出发后必须有明确视觉差异：在家使用 `home-room-v1.png`，旅行中使用空房 `home-room-away-v1.png`。
 
 ## 3. 核心游戏循环
 
@@ -124,8 +128,10 @@ postcardSeconds: [12, 38],
 | `assets/generated/pastry-items-sheet-v1.png` | 六款法甜设定页 | 已完成 |
 | `assets/generated/cocktail-cards-sheet-v1.png` | 六款鸡尾酒卡设定页 | 已完成 |
 | `assets/generated/home-room-v1.png` | 小狗在 Alvisse“家中”整理行李 | 已完成并接入首页 |
+| `assets/generated/home-room-away-v1.png` | 小狗旅行后的同一间空房 | 已完成并接入旅行状态 |
 | `assets/generated/travel-fragments-sheet-v1.png` | 六枚旅行碎片设定页 | 已完成并拆分接入 |
 | `assets/generated/final-invitation-v1.png` | 卢森堡黄昏的开放式同行邀请 | 已完成并接入结局 |
+| `assets/generated/postcard-envelope-v1.png` | 奶油纸、勃艮第封口与西高地封蜡信封 | 已完成透明抠图并接入拆信弹窗 |
 
 这些是生产资产，不要只留在 `$CODEX_HOME/generated_images`；当前副本已经放入项目。
 
@@ -261,6 +267,10 @@ europe-postcard-game/
 ## 12. 已实现功能
 
 - 手机优先响应式单页 UI。
+- 首次访问 Intro：说明西高地是 stellla 美丽记忆的载体。
+- 主界面已重构为固定 `100dvh` 的全屏游戏状态，不再要求纵向下拉。
+- 房间主页点击“准备一次旅行”后才显示横向行囊界面。
+- 小狗出发后自动切换为空房插画，并显示半透明旅行 HUD。
 - 法甜六选一。
 - 鸡尾酒卡六选一。
 - 基于标签权重随机挑选回忆。
@@ -271,6 +281,8 @@ europe-postcard-game/
 - 使用 `localStorage` 保存当前旅行和回忆册。
 - 回忆册弹窗。
 - 明信片不再从灰卡原地变成图片：到达时自动弹出封蜡信封，玩家点击拆开后才显示完整插画并收入回忆册；积压时会依次弹出。
+- 明信片弹窗与回忆册统一显示明确的“国家 · 城市”，例如“法国 · Nancy”“荷兰 · Amsterdam”。
+- 完整文案校对索引位于 `docs/copy-review.md`，UI、便签、道具、碎片和 29 张明信片均有稳定编号。
 - 重置本次旅行按钮。
 - 首页已引用 `assets/generated/home-room-v1.png`。
 - 29 个回忆地点均已有可用插画并接入随机旅行池。
@@ -297,7 +309,7 @@ europe-postcard-game/
 
 1. 当前环境没有 `node` 命令，因此没有运行 `node --check`。
 2. 已通过 `python -m http.server 8000` 和无界面 Chrome 完成真实页面自动化交互测试；可复用验收脚本为 `tests/browser_smoke.py`。
-3. 2026-07-01 最新验收覆盖：390×844 手机视口、两封明信片依次弹出、拆封后进入回忆册、隐藏便签、碎片历史发现、余额归零不反锁结局、同行邀请弹窗和结局插画加载，均通过。
+3. 2026-07-01 最新验收覆盖：强制 390×844 CSS 手机视口、Intro、全屏无页面滚动、点击后才进入行囊、出发后空房、两封明信片依次弹出、拆封后进入回忆册、隐藏便签、碎片历史发现、余额归零不反锁结局、同行邀请弹窗和结局插画加载，均通过。
 4. 启动本地服务器在沙箱里可能需要权限批准。
 5. Google Fonts 通过网络加载；离线时会回退到系统字体。正式分享可考虑自托管字体或接受回退。
 6. 项目目录已初始化为 Git 仓库，`main` 跟踪 GitHub 远端；修改完成后提交并推送即可触发 Pages 自动更新。

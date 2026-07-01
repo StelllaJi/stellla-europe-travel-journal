@@ -52,8 +52,8 @@ def command(method, params=None):
             return message.get("result", {})
 
 
-def evaluate(expression):
-    response = command("Runtime.evaluate", {"expression": expression, "returnByValue": True})
+def evaluate(expression, user_gesture=False):
+    response = command("Runtime.evaluate", {"expression": expression, "returnByValue": True, "userGesture": user_gesture})
     result = response["result"]
     if "exceptionDetails" in response:
         raise RuntimeError(response["exceptionDetails"])
@@ -95,6 +95,7 @@ intro = evaluate("""
     const wasOpen = dialog.open;
     const rect = dialog.getBoundingClientRect();
     const copy = dialog.querySelector('.intro-copy');
+    const actionsRect = document.querySelector('.topbar-actions').getBoundingClientRect();
     document.querySelector('#enterGameButton').click();
     document.querySelector('#prepareButton').click();
     return {
@@ -103,18 +104,28 @@ intro = evaluate("""
       viewport: window.innerWidth,
       dialogRect: {left: rect.left, right: rect.right, width: rect.width},
       copyWidth: {client: copy.clientWidth, scroll: copy.scrollWidth},
+      topbarFitsViewport: actionsRect.right <= window.innerWidth && actionsRect.left >= 0,
       packingVisible: !document.querySelector('#packingPanel').hidden,
       pageFitsViewport: document.documentElement.scrollHeight <= window.innerHeight
     };
   })()
 """)
 assert intro["wasOpen"] and intro["heading"] == "欢迎来到stellla的珍贵记忆匣子"
-assert intro["packingVisible"] and intro["pageFitsViewport"]
+assert intro["packingVisible"] and intro["pageFitsViewport"] and intro["topbarFitsViewport"]
 print("[smoke] intro and packing passed", flush=True)
+
+evaluate("document.querySelector('#musicButton').click(); 'music requested';", user_gesture=True)
+time.sleep(.25)
+music_on = evaluate("({pressed: document.querySelector('#musicButton').getAttribute('aria-pressed'), active: document.querySelector('#musicButton').classList.contains('music-on')})")
+assert music_on == {"pressed": "true", "active": True}
+evaluate("document.querySelector('#musicButton').click(); 'music stopped';", user_gesture=True)
+time.sleep(.1)
+assert evaluate("document.querySelector('#musicButton').getAttribute('aria-pressed')") == "false"
+print("[smoke] music toggle passed", flush=True)
 
 trip = evaluate("""
   document.querySelector('[data-id="madeleine"]').click();
-  document.querySelector('[data-id="negroni"]').click();
+  document.querySelector('[data-id="pina-colada"]').click();
   document.querySelector('#departButton').click();
   JSON.parse(localStorage.getItem('little-dog-europe-v1')).trip;
 """)
@@ -269,6 +280,6 @@ print(f"[smoke] reset result: {reset_result}", flush=True)
 assert reset_result == {"saveCleared": True, "albumCount": "0", "introRemembered": True}
 print("[smoke] two-step local reset passed", flush=True)
 
-print(json.dumps({"intro": intro, "trip": trip, "awayRoom": away_room, "firstPostcard": first_postcard, "secondPostcard": second_postcard, "returned": returned, "repeatTrip": repeat_trip, "finale": finale, "resetConfirmation": reset_confirmation, "resetResult": reset_result}, ensure_ascii=False))
+print(json.dumps({"intro": intro, "musicOn": music_on, "trip": trip, "awayRoom": away_room, "firstPostcard": first_postcard, "secondPostcard": second_postcard, "returned": returned, "repeatTrip": repeat_trip, "finale": finale, "resetConfirmation": reset_confirmation, "resetResult": reset_result}, ensure_ascii=False))
 socket.close()
 close_target(target["id"])

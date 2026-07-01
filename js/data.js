@@ -14,18 +14,18 @@ window.GAME_DATA = {
   pastries: [
     { id: "madeleine", name: "玛德琳", art: "assets/items/pastry-madeleine-cutout-v2.png", note: "容易唤醒旧日回忆", tags: ["nostalgia", "home"] },
     { id: "canele", name: "可露丽", art: "assets/items/pastry-canele-cutout-v2.png", note: "偏爱老城与雨天", tags: ["old-town", "rain"] },
-    { id: "paris-brest", name: "巴黎布雷斯特", art: "assets/items/pastry-paris-brest-cutout-v2.png", note: "提高远行与火车概率", tags: ["train", "far"] },
+    { id: "macaron", name: "马卡龙", art: "assets/items/pastry-macaron-cutout-v1.png", note: "颜色、朋友与明亮小店", tags: ["friends", "sunny", "celebration"] },
     { id: "lemon-tart", name: "柠檬挞", art: "assets/items/pastry-lemon-tart-cutout-v2.png", note: "偏爱河边与明亮午后", tags: ["water", "sunny"], unlockCost: { "spring-petal": 1 } },
     { id: "opera", name: "歌剧院蛋糕", art: "assets/items/pastry-opera-cutout-v2.png", note: "寻找音乐与深夜灯光", tags: ["music", "night"], unlockCost: { "midnight-whisper": 1 } },
     { id: "saint-honore", name: "圣多诺黑", art: "assets/items/pastry-saint-honore-cutout-v2.png", note: "稀有，但结果难以预测", tags: ["rare", "surprise"], unlockCost: { "old-stone": 1, "home-key": 1 } }
   ],
   cocktails: [
-    { id: "negroni", name: "Negroni", art: "assets/items/cocktail-negroni-cutout-v2.png", note: "昏黄夜色与酒吧故事", tags: ["night", "bar"] },
-    { id: "old-fashioned", name: "Old Fashioned", art: "assets/items/cocktail-old-fashioned-cutout-v2.png", note: "怀旧建筑与慢故事", tags: ["nostalgia", "old-town"] },
-    { id: "french-75", name: "French 75", art: "assets/items/cocktail-french-75-cutout-v2.png", note: "音乐、庆祝与高光时刻", tags: ["music", "celebration"], unlockCost: { "table-taste": 1 } },
-    { id: "aperol-spritz", name: "Aperol Spritz", art: "assets/items/cocktail-aperol-spritz-cutout-v2.png", note: "露台、朋友和日落", tags: ["friends", "sunny"] },
-    { id: "manhattan", name: "Manhattan", art: "assets/items/cocktail-manhattan-cutout-v2.png", note: "车站与城市游荡", tags: ["train", "city"], unlockCost: { "city-light": 1 } },
-    { id: "espresso-martini", name: "Espresso Martini", art: "assets/items/cocktail-espresso-martini-cutout-v2.png", note: "通宵聊天与咖啡因", tags: ["night", "conversation"], unlockCost: { "home-key": 1, "midnight-whisper": 1 } }
+    { id: "pina-colada", name: "椰林飘香", art: "assets/items/cocktail-pina-colada-cutout-v1.png", note: "海风、朋友与慵懒午后", tags: ["water", "friends", "sunny"] },
+    { id: "mojito", name: "莫吉托", art: "assets/items/cocktail-mojito-cutout-v1.png", note: "绿意、河边与清爽晴天", tags: ["water", "sunny", "city"] },
+    { id: "french-75", name: "法国75", art: "assets/items/cocktail-french-75-cutout-v2.png", note: "音乐、庆祝与高光时刻", tags: ["music", "celebration"], unlockCost: { "table-taste": 1 } },
+    { id: "aperol-spritz", name: "阿佩罗气泡酒", art: "assets/items/cocktail-aperol-spritz-cutout-v2.png", note: "露台、朋友和日落", tags: ["friends", "sunny"] },
+    { id: "margarita", name: "玛格丽特", art: "assets/items/cocktail-margarita-cutout-v1.png", note: "老城、夜晚与一点冒险", tags: ["old-town", "night", "surprise"], unlockCost: { "city-light": 1 } },
+    { id: "espresso-martini", name: "浓缩咖啡马天尼", art: "assets/items/cocktail-espresso-martini-cutout-v2.png", note: "通宵聊天与咖啡因", tags: ["night", "conversation"], unlockCost: { "home-key": 1, "midnight-whisper": 1 } }
   ],
   fragments: [
     { id: "city-light", name: "城市灯光", art: "assets/fragments/fragment-city-light.png", note: "从车窗和雨地里拾到的光。", tags: ["city", "train"] },

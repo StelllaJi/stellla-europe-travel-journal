@@ -76,6 +76,8 @@ h3 { font: 700 clamp(18px, 2.6vw, 24px)/1.25 "Noto Serif SC", serif; }
   cursor: pointer;
 }
 .icon-button.compact { min-width: 42px; padding-inline: 0; font-weight: 900; }
+.music-button { font-size: 18px; transition: color .2s ease, background .2s ease, transform .2s ease; }
+.music-button.music-on { color: #fff1c9; border-color: rgba(240,199,135,.72); background: rgba(143,63,73,.72); transform: translateY(-1px); }
 .icon-button span {
   display: inline-grid;
   place-items: center;
@@ -288,8 +290,11 @@ dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
 @keyframes postcard-in { from { opacity: 0; transform: translateY(28px) rotate(-1deg) scale(.96); } to { opacity: 1; transform: none; } }
 
 @media (max-width: 720px) {
-  .topbar { align-items: flex-start; }
-  .brand-lockup h1 { max-width: 230px; font-size: 22px; }
+  .topbar { align-items: flex-start; gap: 10px; }
+  .topbar-actions { gap: 6px; }
+  .topbar-actions .icon-button { padding-inline: 10px; }
+  .topbar-actions .icon-button.compact { min-width: 38px; min-height: 38px; padding-inline: 0; }
+  .brand-lockup h1 { max-width: 160px; font-size: 20px; }
   .brand-lockup .eyebrow { font-size: 8px; }
   .scene-art { background-position: 57% center; }
   .scene-copy { bottom: 124px; }

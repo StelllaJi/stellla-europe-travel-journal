@@ -4,6 +4,9 @@
   const postcardOffsets = data.postcardSeconds.map(seconds => seconds * 1000);
   const storageKey = "little-dog-europe-v1";
   const introStorageKey = "stellla-europe-intro-seen-v1";
+  const pastryAliases = { "paris-brest": "macaron" };
+  const cocktailAliases = { negroni: "pina-colada", "old-fashioned": "mojito", manhattan: "margarita" };
+  const itemAliases = { ...pastryAliases, ...cocktailAliases };
   const $ = id => document.getElementById(id);
   const locationLabels = {
     Luxembourg: "卢森堡 · Luxembourg City",
@@ -28,6 +31,11 @@
     homeActions: $("homeActions"), introDialog: $("introDialog")
   };
 
+  const music = {
+    context: null, master: null, dry: null, reverb: null, wet: null,
+    enabled: false, timer: null, nextNoteTime: 0, step: 0
+  };
+
   let state = loadState();
   let selectedPastry = null;
   let selectedCocktail = null;
@@ -40,6 +48,7 @@
       saved.album ||= [];
       saved.fragments ||= {};
       saved.unlockedItems ||= [];
+      saved.unlockedItems = [...new Set(saved.unlockedItems.map(id => itemAliases[id] || id))];
       saved.discoveredFragments ||= Object.keys(saved.fragments).filter(id => saved.fragments[id] > 0);
       if (saved.trip && !saved.trip.fragmentId) {
         saved.trip.fragmentId = "city-light";
@@ -47,6 +56,8 @@
       }
       if (saved.trip && !saved.trip.noteId) saved.trip.noteId = data.notes[0].id;
       if (saved.trip) {
+        saved.trip.pastryId = pastryAliases[saved.trip.pastryId] || saved.trip.pastryId;
+        saved.trip.cocktailId = cocktailAliases[saved.trip.cocktailId] || saved.trip.cocktailId;
         saved.trip.openedPostcards ||= [...(saved.trip.collected || [])];
         saved.trip.announcedPostcards ||= [...saved.trip.openedPostcards];
       }
@@ -59,6 +70,93 @@
 
   function formatLocation(memory) {
     return locationLabels[memory.city] || memory.city;
+  }
+
+  function midiFrequency(note) {
+    return 440 * Math.pow(2, (note - 69) / 12);
+  }
+
+  function prepareMusic() {
+    if (music.context) return true;
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return false;
+    music.context = new AudioContextClass();
+    music.master = music.context.createGain();
+    music.dry = music.context.createGain();
+    music.reverb = music.context.createConvolver();
+    music.wet = music.context.createGain();
+    const impulse = music.context.createBuffer(2, music.context.sampleRate * 1.8, music.context.sampleRate);
+    for (let channel = 0; channel < impulse.numberOfChannels; channel += 1) {
+      const samples = impulse.getChannelData(channel);
+      for (let index = 0; index < samples.length; index += 1) {
+        samples[index] = (Math.random() * 2 - 1) * Math.pow(1 - index / samples.length, 2.4);
+      }
+    }
+    music.reverb.buffer = impulse;
+    music.master.gain.value = 0.0001;
+    music.dry.gain.value = .82;
+    music.wet.gain.value = .2;
+    music.dry.connect(music.master);
+    music.reverb.connect(music.wet).connect(music.master);
+    music.master.connect(music.context.destination);
+    return true;
+  }
+
+  function playMusicNote(note, time, duration, volume, type = "triangle") {
+    const oscillator = music.context.createOscillator();
+    const envelope = music.context.createGain();
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(midiFrequency(note), time);
+    envelope.gain.setValueAtTime(.0001, time);
+    envelope.gain.exponentialRampToValueAtTime(volume, time + .035);
+    envelope.gain.exponentialRampToValueAtTime(.0001, time + duration);
+    oscillator.connect(envelope);
+    envelope.connect(music.dry);
+    envelope.connect(music.reverb);
+    oscillator.start(time);
+    oscillator.stop(time + duration + .06);
+  }
+
+  function scheduleMusic() {
+    if (!music.enabled) return;
+    const melody = [72, 76, 79, 76, 74, 77, 81, 77, 71, 74, 79, 74, 72, 76, 81, 79, 77, 74];
+    const bass = [48, 53, 55, 48, 45, 55];
+    while (music.nextNoteTime < music.context.currentTime + .35) {
+      const step = music.step % melody.length;
+      playMusicNote(melody[step], music.nextNoteTime, .72, .055);
+      if (step % 3 === 0) playMusicNote(bass[Math.floor(step / 3)], music.nextNoteTime, 1.45, .035, "sine");
+      music.nextNoteTime += .62;
+      music.step += 1;
+    }
+  }
+
+  function updateMusicButton() {
+    const button = $("musicButton");
+    button.classList.toggle("music-on", music.enabled);
+    button.setAttribute("aria-pressed", String(music.enabled));
+    button.setAttribute("aria-label", music.enabled ? "关闭背景音乐" : "播放背景音乐");
+    button.textContent = music.enabled ? "♫" : "♪";
+  }
+
+  async function toggleMusic() {
+    if (!prepareMusic()) return;
+    if (music.enabled) {
+      music.enabled = false;
+      clearInterval(music.timer);
+      music.master.gain.cancelScheduledValues(music.context.currentTime);
+      music.master.gain.setTargetAtTime(.0001, music.context.currentTime, .08);
+      updateMusicButton();
+      return;
+    }
+    await music.context.resume();
+    music.enabled = true;
+    music.step = 0;
+    music.nextNoteTime = music.context.currentTime + .06;
+    music.master.gain.cancelScheduledValues(music.context.currentTime);
+    music.master.gain.setTargetAtTime(.075, music.context.currentTime, .12);
+    scheduleMusic();
+    music.timer = setInterval(scheduleMusic, 120);
+    updateMusicButton();
   }
 
   function openPacking() {
@@ -463,6 +561,7 @@
   $("closeInvite").addEventListener("click", () => elements.inviteDialog.close());
   $("shareButton").addEventListener("click", shareGame);
   $("introButton").addEventListener("click", () => elements.introDialog.showModal());
+  $("musicButton").addEventListener("click", toggleMusic);
   $("enterGameButton").addEventListener("click", () => {
     localStorage.setItem(introStorageKey, "yes");
     elements.introDialog.close();

@@ -10,6 +10,12 @@
     "cocktails": "generated/cocktail-cards-sheet-v1.png"
   },
   "itemDirectory": "items/",
+  "newItems": {
+    "macaron": "items/pastry-macaron-cutout-v1.png",
+    "pinaColada": "items/cocktail-pina-colada-cutout-v1.png",
+    "mojito": "items/cocktail-mojito-cutout-v1.png",
+    "margarita": "items/cocktail-margarita-cutout-v1.png"
+  },
   "fragmentSheet": "generated/travel-fragments-sheet-v1.png",
   "fragmentDirectory": "fragments/",
   "finalInvitation": "generated/final-invitation-v1.png",

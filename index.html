@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1f312b" />
+    <meta name="description" content="stellla 在卢森堡与欧洲周边生活的小狗旅行手记" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="stellla 的旅行手记" />
+    <title>stellla 的欧洲旅行手记</title>
+    <link rel="icon" href="assets/references/dog-selected-reference.png" />
+    <link rel="apple-touch-icon" href="assets/references/dog-selected-reference.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">A LITTLE LIFE IN EUROPE</p>
+          <h1>stellla 的欧洲旅行手记</h1>
+        </div>
+        <button class="icon-button" id="albumButton" aria-label="打开回忆册">回忆册 <span id="albumCount">0</span></button>
+      </header>
+
+      <section class="scene" id="scene">
+        <div class="scene-art" id="sceneArt" role="img" aria-label="小狗在卢森堡的家"></div>
+        <div class="scene-shade"></div>
+        <div class="scene-copy">
+          <p class="scene-kicker" id="sceneKicker">LUXEMBOURG · HOME</p>
+          <h2 id="sceneTitle">今天要替小狗准备什么？</h2>
+          <p id="sceneText">选一份法甜和一张鸡尾酒灵感卡。它会自己决定去哪里，也可能带回一段没预料到的生活。</p>
+        </div>
+      </section>
+
+      <section class="status-card" id="statusCard" hidden>
+        <div>
+          <p class="label">旅行状态</p>
+          <p class="status-title" id="statusTitle">小狗已经出发</p>
+        </div>
+        <div class="timer" id="timer">59:59</div>
+      </section>
+
+      <section id="packingPanel">
+        <div class="section-heading">
+          <div>
+            <p class="label">01 · PÂTISSERIE</p>
+            <h3>带一份法甜</h3>
+          </div>
+          <p>它影响小狗偏爱的路线</p>
+        </div>
+        <div class="choice-grid" id="pastryChoices"></div>
+
+        <div class="section-heading second">
+          <div>
+            <p class="label">02 · BAR CABINET</p>
+            <h3>挑一张鸡尾酒灵感卡</h3>
+          </div>
+          <p>它影响照片的气质与事件</p>
+        </div>
+        <div class="choice-grid" id="cocktailChoices"></div>
+
+        <button class="primary-button" id="departButton" disabled>请先收拾行囊</button>
+      </section>
+
+      <section class="journey-panel" id="journeyPanel" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="label">POSTCARDS</p>
+            <h3>旅途中寄来的消息</h3>
+          </div>
+          <p id="journeyHint">下一封信还在路上</p>
+        </div>
+        <div class="postcard-list" id="postcardList"></div>
+        <button class="secondary-button" id="resetButton">重新体验这次旅行</button>
+      </section>
+    </main>
+
+    <dialog class="album" id="albumDialog">
+      <div class="album-header">
+        <div>
+          <p class="label">MEMORY ALBUM</p>
+          <h2>回忆册</h2>
+        </div>
+        <button class="icon-button" id="closeAlbum">关闭</button>
+      </div>
+      <div class="collection-progress" id="collectionProgress"></div>
+      <div class="album-grid" id="albumGrid"></div>
+      <div class="fragment-heading">
+        <p class="label">TRAVEL FRAGMENTS</p>
+        <h3>旅行碎片</h3>
+      </div>
+      <div class="fragment-grid" id="fragmentGrid"></div>
+      <div class="fragment-heading shop-heading">
+        <p class="label">LITTLE TRAVEL SHOP</p>
+        <h3>用碎片换新的行囊</h3>
+        <p>解锁后，它会一直留在小狗的柜子里。</p>
+      </div>
+      <div class="shop-grid" id="shopGrid"></div>
+      <section class="finale-panel" id="finalePanel"></section>
+    </dialog>
+
+    <dialog class="invite-dialog" id="inviteDialog">
+      <button class="invite-close" id="closeInvite" aria-label="关闭同行邀请">关闭</button>
+      <div class="invite-art"></div>
+      <div class="invite-copy">
+        <p class="label">THE MAP ISN'T FINISHED</p>
+        <h2>下一站，要不要一起走走？</h2>
+        <p>这些是我已经走过的地方。以后也许还能多一张，我们都在场的明信片。</p>
+        <button class="primary-button" id="shareButton">分享这本手记</button>
+        <small id="shareStatus" aria-live="polite"></small>
+      </div>
+    </dialog>
+
+    <dialog class="postcard-dialog" id="postcardDialog">
+      <div id="postcardDialogContent"></div>
+    </dialog>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "styleVersion": "1.0",
+  "character": {
+    "reference": "references/dog-selected-reference.png",
+    "turnaround": "generated/dog-character-turnaround-v1.png"
+  },
+  "foundations": {
+    "home": "generated/home-room-v1.png",
+    "pastries": "generated/pastry-items-sheet-v1.png",
+    "cocktails": "generated/cocktail-cards-sheet-v1.png"
+  },
+  "itemDirectory": "items/",
+  "fragmentSheet": "generated/travel-fragments-sheet-v1.png",
+  "fragmentDirectory": "fragments/",
+  "finalInvitation": "generated/final-invitation-v1.png",
+  "postcards": {
+    "lux-hamilius": "generated/postcard-lux-hamilius-v1.png",
+    "lux-liquid": "generated/postcard-lux-liquid-bar-v1.png",
+    "lux-uni-boardgame": "generated/postcard-lux-uni-boardgame-v1.png",
+    "nancy-tree-playground": "generated/postcard-nancy-tree-playground-v1.png"
+  }
+}

@@ -5,6 +5,7 @@ this file. The test uses an isolated browser profile and never touches a user's
 normal browser storage.
 """
 
+import base64
 import json
 import os
 import time
@@ -73,6 +74,11 @@ evaluate("""
 """)
 wait_for_reload()
 print("[smoke] clean state reloaded", flush=True)
+
+if os.getenv("INTRO_SCREENSHOT"):
+    screenshot = command("Page.captureScreenshot", {"format": "png", "captureBeyondViewport": False})
+    with open(os.environ["INTRO_SCREENSHOT"], "wb") as image_file:
+        image_file.write(base64.b64decode(screenshot["data"]))
 
 intro = evaluate("""
   (() => {
@@ -164,6 +170,32 @@ assert returned["note"] and returned["rewardClaimed"]
 assert returned["fragmentId"] in returned["discovered"]
 print("[smoke] return rewards passed", flush=True)
 
+repeat_trip = evaluate("""
+  (() => {
+    const before = JSON.parse(localStorage.getItem('little-dog-europe-v1'));
+    const collectionText = document.querySelector('#collectionProgress').textContent;
+    const button = document.querySelector('#resetButton');
+    const buttonText = button.textContent;
+    const roomIsHome = !getComputedStyle(document.querySelector('#sceneArt')).backgroundImage.includes('home-room-away-v1.png');
+    button.click();
+    const after = JSON.parse(localStorage.getItem('little-dog-europe-v1'));
+    return {
+      buttonText,
+      roomIsHome,
+      collectionText,
+      albumBefore: before.album.length,
+      albumAfter: after.album.length,
+      tripCleared: after.trip === null,
+      packingVisible: !document.querySelector('#packingPanel').hidden
+    };
+  })()
+""")
+assert repeat_trip["buttonText"] == "再次出发"
+assert repeat_trip["roomIsHome"] and repeat_trip["tripCleared"] and repeat_trip["packingVisible"]
+assert repeat_trip["albumBefore"] == repeat_trip["albumAfter"] == 2
+assert "2/29" in repeat_trip["collectionText"]
+print("[smoke] repeat trip and postcard collection passed", flush=True)
+
 evaluate("""
   (() => {
     const state = JSON.parse(localStorage.getItem('little-dog-europe-v1'));
@@ -198,5 +230,5 @@ assert "一起走走" in finale["heading"]
 assert "当前 0 枚" in finale["fragmentText"]
 print("[smoke] finale passed", flush=True)
 
-print(json.dumps({"intro": intro, "trip": trip, "awayRoom": away_room, "firstPostcard": first_postcard, "secondPostcard": second_postcard, "returned": returned, "finale": finale}, ensure_ascii=False))
+print(json.dumps({"intro": intro, "trip": trip, "awayRoom": away_room, "firstPostcard": first_postcard, "secondPostcard": second_postcard, "returned": returned, "repeatTrip": repeat_trip, "finale": finale}, ensure_ascii=False))
 socket.close()

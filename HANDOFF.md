@@ -33,6 +33,8 @@
 12. 主游戏采用单一全屏游戏界面，不做需要纵向下拉的落地页；只有回忆册等弹窗内部允许滚动。
 13. 玩家必须先在房间主页点击“准备一次旅行”，才进入法甜与灵感卡选择。
 14. 小狗在家与出发后必须有明确视觉差异：在家使用 `home-room-v1.png`，旅行中使用空房 `home-room-away-v1.png`。
+15. 小狗回家后必须可直接“再次出发”，清除的只是当前旅行，已收藏的明信片、碎片与已解锁道具必须保留。
+16. Collection 指全部 29 张地点明信片记忆，不以 8 张结局门槛作为收藏总数；碎片是独立的辅助系统。
 
 ## 3. 核心游戏循环
 
@@ -129,6 +131,7 @@ postcardSeconds: [12, 38],
 | `assets/generated/cocktail-cards-sheet-v1.png` | 六款鸡尾酒卡设定页 | 已完成 |
 | `assets/generated/home-room-v1.png` | 小狗在 Alvisse“家中”整理行李 | 已完成并接入首页 |
 | `assets/generated/home-room-away-v1.png` | 小狗旅行后的同一间空房 | 已完成并接入旅行状态 |
+| `assets/generated/intro-memory-trunk-v1.png` | 小狗打开记忆箱、明信片与城市片段涌出的 Intro 封面 | 已完成并接入 Intro |
 | `assets/generated/travel-fragments-sheet-v1.png` | 六枚旅行碎片设定页 | 已完成并拆分接入 |
 | `assets/generated/final-invitation-v1.png` | 卢森堡黄昏的开放式同行邀请 | 已完成并接入结局 |
 | `assets/generated/postcard-envelope-v1.png` | 奶油纸、勃艮第封口与西高地封蜡信封 | 已完成透明抠图并接入拆信弹窗 |
@@ -267,7 +270,7 @@ europe-postcard-game/
 ## 12. 已实现功能
 
 - 手机优先响应式单页 UI。
-- 首次访问 Intro：说明西高地是 stellla 美丽记忆的载体。
+- 首次访问 Intro：使用“小狗打开记忆箱”的独立封面，说明西高地是 stellla 美丽记忆的载体。
 - 主界面已重构为固定 `100dvh` 的全屏游戏状态，不再要求纵向下拉。
 - 房间主页点击“准备一次旅行”后才显示横向行囊界面。
 - 小狗出发后自动切换为空房插画，并显示半透明旅行 HUD。
@@ -280,6 +283,8 @@ europe-postcard-game/
 - 浏览器关闭后根据真实时间继续结算。
 - 使用 `localStorage` 保存当前旅行和回忆册。
 - 回忆册弹窗。
+- 顶部入口与收藏弹窗统一命名为“我的明信片／我的明信片记忆”，收藏进度为已收藏数 / 29。
+- 旅行回家后恢复有小狗的房间画面，HUD 按钮改为“再次出发”，点击直接重开行囊且保留收藏。
 - 明信片不再从灰卡原地变成图片：到达时自动弹出封蜡信封，玩家点击拆开后才显示完整插画并收入回忆册；积压时会依次弹出。
 - 明信片弹窗与回忆册统一显示明确的“国家 · 城市”，例如“法国 · Nancy”“荷兰 · Amsterdam”。
 - 完整文案校对索引位于 `docs/copy-review.md`，UI、便签、道具、碎片和 29 张明信片均有稳定编号。

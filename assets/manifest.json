@@ -13,6 +13,7 @@
   "fragmentSheet": "generated/travel-fragments-sheet-v1.png",
   "fragmentDirectory": "fragments/",
   "finalInvitation": "generated/final-invitation-v1.png",
+  "introCover": "generated/intro-memory-trunk-v1.png",
   "awayHome": "generated/home-room-away-v1.png",
   "postcardEnvelope": "generated/postcard-envelope-v1.png",
   "postcards": {

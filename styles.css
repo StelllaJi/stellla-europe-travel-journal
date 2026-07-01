@@ -215,7 +215,7 @@ dialog { color: var(--ink); }
 dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
 .intro-dialog { width: min(calc(100% - 24px), 980px); height: min(calc(100dvh - 24px), 700px); padding: 0; overflow: hidden; border: 0; border-radius: 28px; background: var(--paper); box-shadow: 0 35px 120px rgba(0,0,0,.4); }
 .intro-dialog[open] { display: grid; grid-template-columns: 1.08fr .92fr; }
-.intro-art { background: linear-gradient(180deg, transparent 55%, rgba(20,34,29,.3)), url("assets/generated/home-room-v1.png") 60% center/cover; }
+.intro-art { background: linear-gradient(180deg, transparent 58%, rgba(20,34,29,.24)), url("assets/generated/intro-memory-trunk-v1.png") center 58%/cover; }
 .intro-copy { min-width: 0; display: flex; flex-direction: column; justify-content: center; padding: clamp(28px,5vw,58px); overflow-wrap: anywhere; }
 .intro-copy > p:not(.label) { margin-top: 15px; color: var(--muted); font: 400 15px/1.75 "Noto Serif SC", serif; }
 .intro-copy .primary-button { margin-top: 28px; }
@@ -223,7 +223,7 @@ dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
 .album { width: min(100% - 24px, 900px); max-height: 90dvh; padding: 24px; overflow: auto; border: 0; border-radius: 26px; background: var(--paper); box-shadow: var(--shadow); }
 .album-header { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .album .icon-button { color: var(--ink); border-color: var(--line); background: var(--cream); box-shadow: none; }
-.collection-progress { display: grid; grid-template-columns: repeat(2,1fr); gap: 9px; margin-top: 20px; }
+.collection-progress { display: grid; grid-template-columns: 1fr; gap: 9px; margin-top: 20px; }
 .collection-progress div { display: flex; justify-content: space-between; padding: 12px 14px; border: 1px solid var(--line); border-radius: 13px; background: var(--cream); }
 .collection-progress span, .fragment-item small, .shop-copy small { color: var(--muted); font-size: 12px; }
 .collection-progress strong { color: var(--wine); }

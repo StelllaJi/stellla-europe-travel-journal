@@ -24,6 +24,14 @@ def request_json(url, method="GET"):
         return json.load(response)
 
 
+def close_target(target_id):
+    with urllib.request.urlopen(f"http://127.0.0.1:{CDP_PORT}/json/close/{target_id}", timeout=5):
+        pass
+
+
+for open_target in request_json(f"http://127.0.0.1:{CDP_PORT}/json"):
+    if open_target.get("type") == "page":
+        close_target(open_target["id"])
 target = request_json(f"http://127.0.0.1:{CDP_PORT}/json/new?{GAME_URL}", "PUT")
 print("[smoke] target opened", flush=True)
 socket = websocket.create_connection(target["webSocketDebuggerUrl"], timeout=5)
@@ -53,7 +61,7 @@ def evaluate(expression):
 
 
 def wait_for_reload():
-    time.sleep(1)
+    time.sleep(1.5)
 
 
 command("Emulation.setDeviceMetricsOverride", {
@@ -134,7 +142,7 @@ first_postcard = evaluate("""
     const dialogOpen = document.querySelector('#postcardDialog').open;
     reveal.click();
     const hasArt = getComputedStyle(document.querySelector('.postcard-reveal-art'))
-      .backgroundImage.includes('postcard-');
+      .backgroundImage.includes('assets/');
     document.querySelector('[data-close-postcard]').click();
     return { dialogOpen, hasArt };
   })()
@@ -233,5 +241,34 @@ assert "一起走走" in finale["heading"]
 assert "当前 0 枚" in finale["fragmentText"]
 print("[smoke] finale passed", flush=True)
 
-print(json.dumps({"intro": intro, "trip": trip, "awayRoom": away_room, "firstPostcard": first_postcard, "secondPostcard": second_postcard, "returned": returned, "repeatTrip": repeat_trip, "finale": finale}, ensure_ascii=False))
+reset_confirmation = evaluate("""
+  (() => {
+    document.querySelector('#closeInvite').click();
+    document.querySelector('#albumButton').click();
+    const button = document.querySelector('#resetAllButton');
+    button.click();
+    return {
+      armed: button.classList.contains('armed'),
+      text: button.textContent,
+      saveStillPresent: Boolean(localStorage.getItem('little-dog-europe-v1'))
+    };
+  })()
+""")
+assert reset_confirmation["armed"] and reset_confirmation["saveStillPresent"]
+assert "确认清空" in reset_confirmation["text"]
+evaluate("document.querySelector('#resetAllButton').click(); 'reloading';")
+wait_for_reload()
+reset_result = evaluate("""
+  ({
+    saveCleared: localStorage.getItem('little-dog-europe-v1') === null,
+    albumCount: document.querySelector('#albumCount').textContent,
+    introRemembered: localStorage.getItem('stellla-europe-intro-seen-v1') === 'yes'
+  })
+""")
+print(f"[smoke] reset result: {reset_result}", flush=True)
+assert reset_result == {"saveCleared": True, "albumCount": "0", "introRemembered": True}
+print("[smoke] two-step local reset passed", flush=True)
+
+print(json.dumps({"intro": intro, "trip": trip, "awayRoom": away_room, "firstPostcard": first_postcard, "secondPostcard": second_postcard, "returned": returned, "repeatTrip": repeat_trip, "finale": finale, "resetConfirmation": reset_confirmation, "resetResult": reset_result}, ensure_ascii=False))
 socket.close()
+close_target(target["id"])

@@ -31,6 +31,8 @@
   let state = loadState();
   let selectedPastry = null;
   let selectedCocktail = null;
+  let resetAllArmed = false;
+  let resetAllTimer = null;
 
   function loadState() {
     try {
@@ -395,6 +397,30 @@
     openPacking();
   }
 
+  function disarmFullReset() {
+    clearTimeout(resetAllTimer);
+    resetAllArmed = false;
+    const button = $("resetAllButton");
+    button.classList.remove("armed");
+    button.textContent = "清空我的进度";
+    $("resetAllStatus").textContent = "只会清除当前浏览器里的明信片、碎片与道具。";
+  }
+
+  function resetAllProgress() {
+    if (!resetAllArmed) {
+      resetAllArmed = true;
+      const button = $("resetAllButton");
+      button.classList.add("armed");
+      button.textContent = "再点一次，确认清空";
+      $("resetAllStatus").textContent = "此操作无法撤销；其他人和其他浏览器的进度不会受影响。";
+      resetAllTimer = setTimeout(disarmFullReset, 6000);
+      return;
+    }
+    clearTimeout(resetAllTimer);
+    localStorage.removeItem(storageKey);
+    location.reload();
+  }
+
   function checkSceneArt() {
     const image = new Image();
     image.onload = () => elements.art.classList.remove("no-art");
@@ -428,7 +454,8 @@
   elements.depart.addEventListener("click", beginJourney);
   $("resetButton").addEventListener("click", resetTrip);
   elements.albumButton.addEventListener("click", () => { renderAlbum(); elements.albumDialog.showModal(); });
-  $("closeAlbum").addEventListener("click", () => elements.albumDialog.close());
+  $("closeAlbum").addEventListener("click", () => { disarmFullReset(); elements.albumDialog.close(); });
+  $("resetAllButton").addEventListener("click", resetAllProgress);
   elements.shopGrid.addEventListener("click", unlockItem);
   elements.postcards.addEventListener("click", handleJourneyPostcard);
   elements.postcardDialogContent.addEventListener("click", handlePostcardDialog);

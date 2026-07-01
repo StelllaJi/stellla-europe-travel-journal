@@ -258,6 +258,11 @@ dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
 .finale-panel.unlocked { min-height: 280px; color: white; border: 0; background: linear-gradient(180deg,transparent,rgba(20,34,29,.84)),url("assets/generated/final-invitation-v1.png") center/cover; }
 .finale-panel.unlocked p:last-child { color: rgba(255,255,255,.8); }
 .finale-panel .primary-button { margin-top: 17px; }
+.reset-progress-zone { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 28px; padding: 18px; border: 1px solid rgba(143,63,73,.2); border-radius: 17px; background: rgba(255,250,240,.58); }
+.reset-progress-zone strong, .reset-progress-zone small { display: block; }
+.reset-progress-zone small { max-width: 520px; margin-top: 5px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.reset-progress-zone button { flex: 0 0 auto; padding: 9px 13px; border: 1px solid rgba(143,63,73,.34); border-radius: 999px; color: var(--wine); background: transparent; font-size: 11px; font-weight: 800; cursor: pointer; }
+.reset-progress-zone button.armed { color: white; background: var(--wine); }
 
 .invite-dialog { width: min(100% - 24px,920px); padding: 0; overflow: hidden; border: 0; border-radius: 26px; color: white; background: #1f312b; box-shadow: var(--shadow); }
 .invite-art { min-height: 70vh; background: linear-gradient(90deg,rgba(16,28,23,.1),rgba(16,28,23,.84)),url("assets/generated/final-invitation-v1.png") center/cover; }
@@ -324,6 +329,8 @@ dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
   .shop-item { grid-template-columns: 58px 1fr; }
   .shop-item > img { width: 58px; height: 58px; }
   .shop-item button { grid-column: 1/-1; width: 100%; }
+  .reset-progress-zone { align-items: stretch; flex-direction: column; }
+  .reset-progress-zone button { width: 100%; min-height: 44px; }
   .invite-art { min-height: 78vh; background: linear-gradient(180deg,rgba(16,28,23,.04) 25%,rgba(16,28,23,.92) 72%),url("assets/generated/final-invitation-v1.png") 42% center/cover; }
   .invite-copy { left: 22px; right: 22px; top: auto; bottom: 24px; width: auto; transform: none; }
   .invite-copy h2 { font-size: 29px; }

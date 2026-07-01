@@ -94,7 +94,7 @@ intro = evaluate("""
     };
   })()
 """)
-assert intro["wasOpen"] and "stellla 的美丽记忆" in intro["heading"]
+assert intro["wasOpen"] and intro["heading"] == "欢迎来到stellla的珍贵记忆匣子"
 assert intro["packingVisible"] and intro["pageFitsViewport"]
 print("[smoke] intro and packing passed", flush=True)
 

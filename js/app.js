@@ -195,7 +195,7 @@
     elements.statusTitle.textContent = progress.returned ? "小狗回来了，还带着新的碎片" : `带着 ${pastry.name} 与 ${cocktail.name} 旅行中`;
     elements.kicker.textContent = progress.returned ? "WELCOME HOME" : "SOMEWHERE IN EUROPE";
     elements.title.textContent = progress.returned ? "门外传来了熟悉的脚步声" : "小狗暂时不在家";
-    elements.text.textContent = progress.returned ? "它把沿途收集的东西摊在桌上，其中有些故事只愿意讲给一个人听。" : "不用一直等在这里。离开一会儿，下一张照片会在该来的时候抵达。";
+    elements.text.textContent = progress.returned ? "它把沿途收集的东西摊在桌上，想把旅途的故事讲给你听。" : "不用一直等在这里。离开一会儿，下一张明信片会在该来的时候抵达。";
 
     const memoryCards = state.trip.memoryIds.map((id, index) => {
       const memory = data.memories.find(item => item.id === id);

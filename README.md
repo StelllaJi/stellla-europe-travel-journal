@@ -2,6 +2,8 @@
 
 受“准备行囊—等待—收到照片—带回纪念品”的放置旅行循环启发，记录用户在卢森堡及欧洲周边的真实生活。
 
+在线游玩：<https://stelllaji.github.io/stellla-europe-travel-journal/>
+
 新账号或新会话接手时，请先阅读 [`HANDOFF.md`](HANDOFF.md)。
 
 ## 本地预览
@@ -14,7 +16,13 @@ python -m http.server 8000
 
 访问 `http://localhost:8000`。当前测试版默认一分钟完成旅行：第 12 秒和第 38 秒收到途中照片，第 60 秒回家。
 
-手机与电脑连接同一 Wi-Fi 时，可在手机浏览器访问电脑的局域网地址，例如当前开发机为 `http://172.16.83.52:8000`。该地址只在同一局域网和本地服务器运行期间有效；发给外部朋友仍需部署公网 HTTPS 版本。
+手机与电脑连接同一 Wi-Fi 时，也可在手机浏览器访问电脑的局域网地址进行开发预览。对外分享请使用上面的公网 HTTPS 地址。
+
+## 发布更新
+
+公开仓库：<https://github.com/StelllaJi/stellla-europe-travel-journal>
+
+GitHub Pages 从 `main` 分支根目录自动发布。以后修改并测试完成后，提交并推送到 `main`，原在线链接会自动更新，无需重新创建网址。
 
 正式发布时，把 `js/data.js` 中的 `tripDurationSeconds` 从 `60` 改为 `3600`，并相应调整 `postcardSeconds` 即可。
 

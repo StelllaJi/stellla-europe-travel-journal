@@ -176,11 +176,14 @@ repeat_trip = evaluate("""
     const collectionText = document.querySelector('#collectionProgress').textContent;
     const button = document.querySelector('#resetButton');
     const buttonText = button.textContent;
+    const buttonRect = button.getBoundingClientRect();
+    const buttonVisible = buttonRect.top >= 0 && buttonRect.bottom <= window.innerHeight;
     const roomIsHome = !getComputedStyle(document.querySelector('#sceneArt')).backgroundImage.includes('home-room-away-v1.png');
     button.click();
     const after = JSON.parse(localStorage.getItem('little-dog-europe-v1'));
     return {
       buttonText,
+      buttonVisible,
       roomIsHome,
       collectionText,
       albumBefore: before.album.length,
@@ -191,7 +194,7 @@ repeat_trip = evaluate("""
   })()
 """)
 assert repeat_trip["buttonText"] == "再次出发"
-assert repeat_trip["roomIsHome"] and repeat_trip["tripCleared"] and repeat_trip["packingVisible"]
+assert repeat_trip["buttonVisible"] and repeat_trip["roomIsHome"] and repeat_trip["tripCleared"] and repeat_trip["packingVisible"]
 assert repeat_trip["albumBefore"] == repeat_trip["albumAfter"] == 2
 assert "2/29" in repeat_trip["collectionText"]
 print("[smoke] repeat trip and postcard collection passed", flush=True)

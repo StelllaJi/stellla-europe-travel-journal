@@ -190,13 +190,17 @@
     elements.homeActions.hidden = true;
     elements.journey.hidden = false;
     elements.status.hidden = false;
+    elements.journey.classList.toggle("returned", progress.returned);
     elements.art.classList.toggle("away", !progress.returned);
     elements.timer.textContent = progress.returned ? "已回家" : `${String(mins).padStart(2,"0")}:${String(secs).padStart(2,"0")}`;
     elements.statusTitle.textContent = progress.returned ? "小狗回来了，还带着新的碎片" : `带着 ${pastry.name} 与 ${cocktail.name} 旅行中`;
     elements.kicker.textContent = progress.returned ? "WELCOME HOME" : "SOMEWHERE IN EUROPE";
     elements.title.textContent = progress.returned ? "门外传来了熟悉的脚步声" : "小狗暂时不在家";
     elements.text.textContent = progress.returned ? "它把沿途收集的东西摊在桌上，想把旅途的故事讲给你听。" : "不用一直等在这里。离开一会儿，下一张明信片会在该来的时候抵达。";
-    $("resetButton").textContent = progress.returned ? "再次出发" : "结束本次旅行";
+    const resetButton = $("resetButton");
+    resetButton.textContent = progress.returned ? "再次出发" : "结束本次旅行";
+    resetButton.classList.toggle("primary-button", progress.returned);
+    resetButton.classList.toggle("secondary-button", !progress.returned);
 
     const memoryCards = state.trip.memoryIds.map((id, index) => {
       const memory = data.memories.find(item => item.id === id);
@@ -405,6 +409,7 @@
     } else {
       elements.packing.hidden = true;
       elements.journey.hidden = true;
+      elements.journey.classList.remove("returned");
       elements.status.hidden = true;
       elements.homeActions.hidden = false;
       elements.art.classList.remove("away");

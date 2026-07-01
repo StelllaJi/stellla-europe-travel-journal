@@ -180,6 +180,8 @@ h3 { font: 700 clamp(18px, 2.6vw, 24px)/1.25 "Noto Serif SC", serif; }
   left: clamp(14px, 3vw, 36px);
   right: clamp(14px, 3vw, 36px);
   bottom: calc(clamp(14px, 3vw, 30px) + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
   max-height: 47dvh;
   padding: 16px;
   overflow: hidden;
@@ -195,7 +197,7 @@ h3 { font: 700 clamp(18px, 2.6vw, 24px)/1.25 "Noto Serif SC", serif; }
 .timer { color: var(--wine); font-size: 23px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .journey-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 9px; }
 .journey-heading > p { color: var(--muted); font-size: 12px; }
-.postcard-list { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; }
+.postcard-list { min-height: 0; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
 .journey-panel .postcard { display: grid; grid-template-columns: 74px 1fr; min-width: 0; min-height: 82px; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--cream); }
 .journey-panel .postcard-image { min-height: 82px; background-size: cover; background-position: center; }
 .journey-panel .postcard-copy { min-width: 0; padding: 9px; }
@@ -208,8 +210,9 @@ h3 { font: 700 clamp(18px, 2.6vw, 24px)/1.25 "Noto Serif SC", serif; }
 .envelope-pattern span { font-size: 28px; filter: sepia(1); }
 .travel-note { grid-column: 1 / -1; padding: 12px 15px 12px 28px; border: 1px solid rgba(200,154,80,.38); border-radius: 6px 14px 14px 6px; background: #fff8df; }
 .travel-note p { font: 600 12px/1.5 "Noto Serif SC", serif; }
-.journey-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+.journey-actions { flex: 0 0 auto; display: flex; justify-content: flex-end; margin-top: 10px; }
 .journey-actions .secondary-button { min-height: 36px; padding: 7px 13px; font-size: 11px; }
+.journey-actions .primary-button { min-height: 44px; padding: 10px 16px; }
 
 dialog { color: var(--ink); }
 dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
@@ -307,6 +310,8 @@ dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
   .journey-panel .postcard-copy .label { display: none; }
   .travel-note { padding: 10px 12px; }
   .travel-note .label { display: none; }
+  .journey-panel.returned .postcard-list { padding-bottom: 2px; }
+  .journey-panel.returned .journey-actions { margin-top: 8px; }
   .intro-dialog { width: calc(100% - 14px); height: calc(100dvh - 14px); border-radius: 21px; }
   .intro-dialog[open] { grid-template-columns: 1fr; grid-template-rows: 42% 58%; }
   .intro-copy { justify-content: flex-start; padding: 24px; overflow: auto; }

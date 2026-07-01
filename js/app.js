@@ -365,7 +365,13 @@
 
   function render() {
     renderAlbum();
-    if (state.trip) renderTrip();
+    if (state.trip) {
+      renderTrip();
+    } else {
+      elements.packing.hidden = false;
+      elements.journey.hidden = true;
+      elements.status.hidden = true;
+    }
   }
 
   renderChoices(data.pastries, elements.pastry, "pastry");

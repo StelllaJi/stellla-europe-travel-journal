@@ -204,24 +204,46 @@
     const selectedId = type === "pastry" ? selectedPastry?.id : selectedCocktail?.id;
     container.innerHTML = items.map(item => {
       const unlocked = isUnlocked(item);
-      return `
-      <button class="choice-card ${selectedId === item.id ? "selected" : ""} ${unlocked ? "" : "locked-choice"}" data-type="${type}" data-id="${item.id}" ${unlocked ? "" : "disabled"}>
+      if (unlocked) return `
+      <button class="choice-card ${selectedId === item.id ? "selected" : ""}" data-type="${type}" data-id="${item.id}">
         <span class="choice-art"><img src="${item.art}" alt="" loading="lazy"></span>
         <span class="choice-copy">
           <strong>${item.name}</strong>
-          <small>${unlocked ? item.note : "在回忆册的小商店里解锁"}</small>
+          <small>${item.note}</small>
         </span>
       </button>`;
+      const costs = Object.entries(item.unlockCost).map(([id, amount]) => {
+        const fragment = data.fragments.find(entry => entry.id === id);
+        const owned = state.fragments?.[id] || 0;
+        return `<span class="choice-cost ${owned >= amount ? "ready" : ""}">${fragment.name} ${owned}/${amount}</span>`;
+      }).join("");
+      const affordable = Object.entries(item.unlockCost).every(([id, amount]) => (state.fragments?.[id] || 0) >= amount);
+      return `
+      <article class="choice-card locked-choice" data-type="${type}" data-id="${item.id}">
+        <span class="choice-art"><img src="${item.art}" alt="" loading="lazy"></span>
+        <span class="choice-copy">
+          <strong>${item.name}</strong>
+          <span class="choice-costs">${costs}</span>
+          <button class="choice-unlock-button" data-unlock-id="${item.id}" ${affordable ? "" : "disabled"}>${affordable ? "用碎片解锁" : "碎片不足"}</button>
+        </span>
+      </article>`;
     }).join("");
+  }
+
+  function handleChoiceAction(event) {
+    if (event.target.closest("[data-unlock-id]")) return unlockItem(event);
+    selectChoice(event);
   }
 
   function selectChoice(event) {
     const button = event.target.closest(".choice-card");
     if (!button) return;
     const { type, id } = button.dataset;
+    const item = (type === "pastry" ? data.pastries : data.cocktails).find(entry => entry.id === id);
+    if (!item || !isUnlocked(item)) return;
     document.querySelectorAll(`[data-type="${type}"]`).forEach(el => el.classList.toggle("selected", el === button));
-    if (type === "pastry") selectedPastry = data.pastries.find(item => item.id === id);
-    if (type === "cocktail") selectedCocktail = data.cocktails.find(item => item.id === id);
+    if (type === "pastry") selectedPastry = item;
+    if (type === "cocktail") selectedCocktail = item;
     elements.depart.disabled = !(selectedPastry && selectedCocktail);
     if (!elements.depart.disabled) elements.depart.textContent = `带上 ${selectedPastry.name} 与 ${selectedCocktail.name} 出发`;
   }
@@ -622,8 +644,8 @@
 
   renderChoices(data.pastries, elements.pastry, "pastry");
   renderChoices(data.cocktails, elements.cocktail, "cocktail");
-  elements.pastry.addEventListener("click", selectChoice);
-  elements.cocktail.addEventListener("click", selectChoice);
+  elements.pastry.addEventListener("click", handleChoiceAction);
+  elements.cocktail.addEventListener("click", handleChoiceAction);
   $("prepareButton").addEventListener("click", openPacking);
   $("closePacking").addEventListener("click", closePacking);
   elements.depart.addEventListener("click", beginJourney);

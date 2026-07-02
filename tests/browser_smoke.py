@@ -125,6 +125,33 @@ assert intro["wasOpen"] and intro["heading"] == "欢迎来到stellla的珍贵记
 assert intro["packingVisible"] and intro["pageFitsViewport"] and intro["topbarFitsViewport"]
 print("[smoke] intro and packing passed", flush=True)
 
+evaluate("""
+  localStorage.setItem('little-dog-europe-v1', JSON.stringify({
+    album: [], fragments: {'spring-petal': 1}, unlockedItems: [], discoveredFragments: ['spring-petal']
+  }));
+  location.reload();
+  'reloading';
+""")
+wait_for_reload()
+packing_unlock = evaluate("""
+  (() => {
+    document.querySelector('#prepareButton').click();
+    const unlock = document.querySelector('[data-unlock-id="lemon-tart"]');
+    const wasAvailable = !unlock.disabled;
+    unlock.click();
+    const state = JSON.parse(localStorage.getItem('little-dog-europe-v1'));
+    return {
+      wasAvailable,
+      unlocked: state.unlockedItems.includes('lemon-tart'),
+      fragmentSpent: state.fragments['spring-petal'] === 0,
+      selectableNow: Boolean(document.querySelector('button.choice-card[data-id="lemon-tart"]')),
+      packingVisible: !document.querySelector('#packingPanel').hidden
+    };
+  })()
+""")
+assert all(packing_unlock.values())
+print("[smoke] unlock directly from packing passed", flush=True)
+
 evaluate("document.querySelector('#musicButton').click(); 'music requested';", user_gesture=True)
 time.sleep(.25)
 music_on = evaluate("({pressed: document.querySelector('#musicButton').getAttribute('aria-pressed'), active: document.querySelector('#musicButton').classList.contains('music-on')})")

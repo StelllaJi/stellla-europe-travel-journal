@@ -179,7 +179,7 @@
 ### P02 · lux-gare
 - 国家 · 城市：卢森堡 · Luxembourg City
 - 标题：Gare：赶上与错过
-- 正文：stellla曾经一个周末来了四趟gare，是出发的美丽起点。
+- 正文：stellla曾经一个周末来了四趟gare，是旅途出发的美丽起点。
 
 ### P05 · lux-roma
 - 国家 · 城市：卢森堡 · Luxembourg City
@@ -189,7 +189,7 @@
 ### P06 · lux-liquid
 - 国家 · 城市：卢森堡 · Luxembourg City
 - 标题：Liquid Bar 的夜晚
-- 正文：酒杯上的水汽和没有讲完的话，都被夜色留下了。
+- 正文：酒杯上的水汽和没有讲完的话，都被夜色留下了
 
 ### P07 · lux-dudelange
 - 国家 · 城市：卢森堡 · Dudelange
@@ -199,7 +199,7 @@
 ### P08 · lux-alvisse
 - 国家 · 城市：卢森堡 · Luxembourg City
 - 标题：回到 Alvisse
-- 正文：回家回家！
+- 正文：回家回家！睡觉睡觉！开摆开摆！
 
 ### P09 · lux-ck-tennis
 - 国家 · 城市：卢森堡 · Kockelscheuer
@@ -214,7 +214,7 @@
 ### P11 · lux-toro-oyster
 - 国家 · 城市：卢森堡 · Luxembourg City
 - 标题：Toro 与生蚝
-- 正文：好吃好吃好吃香香
+- 正文：好吃好吃好吃香香，我第一次见到这么大一坨金枪鱼
 
 ### P12 · lux-uni-boardgame
 - 国家 · 城市：卢森堡 · Belval
@@ -229,12 +229,12 @@
 ### P14 · nancy-tree-playground
 - 国家 · 城市：法国 · Nancy
 - 标题：钻进树桩
-- 正文：在 Pépinière 的木头游乐场里，大人也可以暂时不太像大人
+- 正文：在 Pépinière 的木头游乐场里，大人也可以暂时不太像大人，一起蠕动之
 
 ### P15 · nancy-animal-space
 - 国家 · 城市：法国 · Nancy
 - 标题：公园里的动物朋友
-- 正文：每次见到小动物就会哈特软软
+- 正文：每次见到小动物就会哈特软软，大家就在植物园里chill地亲人
 
 ### P16 · nancy-fine-arts
 - 国家 · 城市：法国 · Nancy
@@ -249,7 +249,7 @@
 ### P18 · trier-cathedral
 - 国家 · 城市：德国 · Trier
 - 标题：最大的教堂
-- 正文：特里尔主教座堂的石头很沉，光却从高处轻轻落下来。
+- 正文：特里尔主教座堂的石头很沉，光却从高处轻轻落下来
 
 ### P19 · trier-marx
 - 国家 · 城市：德国 · Trier
@@ -295,12 +295,12 @@
 ### P27 · ams-bottle-return
 - 国家 · 城市：荷兰 · Amsterdam
 - 标题：回收空瓶支线
-- 正文：韩老师教我财富密码
+- 正文：韩老师教我财富密码，没钱的时候可以去捡瓶子
 
 ### P28 · ams-han-studio
 - 国家 · 城市：荷兰 · Amsterdam
 - 标题：热得睡不着的 Studio
-- 正文：韩老师的可爱小家，但是为什么我洗完澡就开始出汗
+- 正文：韩老师的可爱小家，但是为什么我洗完澡就开始出汗。总之就是我喝多了。
 
 ### P29 · ams-flower-market
 - 国家 · 城市：荷兰 · Amsterdam

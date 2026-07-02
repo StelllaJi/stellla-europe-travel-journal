@@ -83,6 +83,17 @@ evaluate("""
 wait_for_reload()
 print("[smoke] clean state reloaded", flush=True)
 
+memory_data = evaluate("""
+  ({
+    count: window.GAME_DATA.memories.length,
+    photoCount: window.GAME_DATA.memories.filter(item => item.photo).length,
+    removedLocationsAbsent: !window.GAME_DATA.memories.some(item => ['lux-auchan', 'lux-gelle-fra'].includes(item.id)),
+    redLightHasNote: Boolean(window.GAME_DATA.memories.find(item => item.id === 'ams-red-light')?.photoNote)
+  })
+""")
+assert memory_data == {"count": 27, "photoCount": 26, "removedLocationsAbsent": True, "redLightHasNote": True}
+print("[smoke] real-photo memory data passed", flush=True)
+
 if os.getenv("INTRO_SCREENSHOT"):
     screenshot = command("Page.captureScreenshot", {"format": "png", "captureBeyondViewport": False})
     with open(os.environ["INTRO_SCREENSHOT"], "wb") as image_file:
@@ -131,7 +142,7 @@ trip = evaluate("""
 """)
 assert trip["noteId"] and trip["fragmentId"]
 assert trip["openedPostcards"] == []
-away_room = evaluate("getComputedStyle(document.querySelector('#sceneArt')).backgroundImage.includes('home-room-away-v1.png')")
+away_room = evaluate("getComputedStyle(document.querySelector('#sceneArt')).backgroundImage.includes('home-room-away-v1.jpg')")
 assert away_room
 print("[smoke] departure and away room passed", flush=True)
 
@@ -197,7 +208,7 @@ repeat_trip = evaluate("""
     const buttonText = button.textContent;
     const buttonRect = button.getBoundingClientRect();
     const buttonVisible = buttonRect.top >= 0 && buttonRect.bottom <= window.innerHeight;
-    const roomIsHome = !getComputedStyle(document.querySelector('#sceneArt')).backgroundImage.includes('home-room-away-v1.png');
+    const roomIsHome = !getComputedStyle(document.querySelector('#sceneArt')).backgroundImage.includes('home-room-away-v1.jpg');
     button.click();
     const after = JSON.parse(localStorage.getItem('little-dog-europe-v1'));
     return {
@@ -215,8 +226,29 @@ repeat_trip = evaluate("""
 assert repeat_trip["buttonText"] == "再次出发"
 assert repeat_trip["buttonVisible"] and repeat_trip["roomIsHome"] and repeat_trip["tripCleared"] and repeat_trip["packingVisible"]
 assert repeat_trip["albumBefore"] == repeat_trip["albumAfter"] == 2
-assert "2/29" in repeat_trip["collectionText"]
+assert "2/27" in repeat_trip["collectionText"]
 print("[smoke] repeat trip and postcard collection passed", flush=True)
+
+photo_flip = evaluate("""
+  (() => {
+    document.querySelector('#albumButton').click();
+    document.querySelector('[data-open-memory]').click();
+    const flip = document.querySelector('[data-flip-postcard]');
+    flip.click();
+    const card = document.querySelector('[data-memory-card]');
+    const result = {
+      dialogOpen: document.querySelector('#postcardDialog').open,
+      flipped: card.classList.contains('is-flipped'),
+      buttonText: flip.textContent,
+      hasBack: Boolean(card.querySelector('.postcard-memory-photo, .postcard-memory-note'))
+    };
+    document.querySelector('[data-close-postcard]').click();
+    return result;
+  })()
+""")
+assert photo_flip["dialogOpen"] and photo_flip["flipped"] and photo_flip["hasBack"]
+assert photo_flip["buttonText"] == "回到插画"
+print("[smoke] postcard real-photo flip passed", flush=True)
 
 evaluate("""
   (() => {
@@ -243,7 +275,7 @@ finale = evaluate("""
       heading: document.querySelector('#inviteDialog h2').textContent,
       fragmentText,
       imageLoaded: getComputedStyle(document.querySelector('.invite-art'))
-        .backgroundImage.includes('final-invitation-v1.png')
+        .backgroundImage.includes('final-invitation-v1.jpg')
     };
   })()
 """)

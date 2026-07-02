@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 *.log
 assets/generated/*-chroma-*.png
+assets/photos/inbox/*
+!assets/photos/inbox/.gitkeep

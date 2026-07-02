@@ -8,11 +8,9 @@
 |---|---|---|---|
 | lux-hamilius | Hamilius | 日常活动区域 | 时间、同行者、具体事件 |
 | lux-gare | Luxembourg Gare | 日常活动区域 | 一次最难忘的出发或回家 |
-| lux-auchan | Auchan | 采购 | 常买的东西、好笑的小事 |
-| lux-gelle-fra | Gëlle Fra | 金色女神像 | 季节、当时做了什么 |
 | lux-roma | Restaurant Roma | 吃饭 | 菜、同行者、对话 |
 | lux-liquid | Liquid Bar | 酒吧 | 喝了什么、夜晚细节 |
-| lux-dudelange | Dudelange 朋友家 | 私人住宅 | 等待照片；门牌不得发布 |
+| lux-dudelange | Dudelange 朋友家 | 私人住宅 | 真实照片发布前必须隐去门牌与铭牌 |
 | lux-alvisse | Parc Hotel Alvisse | 家 | 房间、窗外、回家习惯照片 |
 | lux-ck-tennis | CK Sportcenter, Kockelscheuer | 打网球 | 输赢、搭档、球场细节 |
 | lux-onerepublic | 待确认场馆 | OneRepublic 演唱会 | 票根或照片确认场馆与日期 |

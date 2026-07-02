@@ -10,6 +10,10 @@
     "cocktails": "generated/cocktail-cards-sheet-v1.png"
   },
   "itemDirectory": "items/",
+  "optimizedIllustrationDirectory": "optimized/",
+  "realPhotoDirectory": "photos/",
+  "realPhotoCount": 26,
+  "realPhotoPolicy": "Public photos are compressed and stripped of location metadata; private-home identifiers are removed before publishing.",
   "newItems": {
     "macaron": "items/pastry-macaron-cutout-v1.png",
     "pinaColada": "items/cocktail-pina-colada-cutout-v1.png",

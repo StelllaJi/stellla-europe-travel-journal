@@ -93,13 +93,13 @@ h3 { font: 700 clamp(18px, 2.6vw, 24px)/1.25 "Noto Serif SC", serif; }
 .scene-art {
   position: absolute;
   inset: 0;
-  background-image: linear-gradient(135deg, rgba(34,61,51,.18), rgba(143,63,73,.08)), url("assets/generated/home-room-v1.png");
+  background-image: linear-gradient(135deg, rgba(34,61,51,.18), rgba(143,63,73,.08)), url("assets/optimized/home-room-v1.jpg");
   background-size: cover;
   background-position: center;
   transition: opacity .45s ease, filter .45s ease;
 }
 .scene-art.away {
-  background-image: linear-gradient(135deg, rgba(34,61,51,.26), rgba(50,66,72,.15)), url("assets/generated/home-room-away-v1.png");
+  background-image: linear-gradient(135deg, rgba(34,61,51,.26), rgba(50,66,72,.15)), url("assets/optimized/home-room-away-v1.jpg");
 }
 .scene-art.no-art::after { content: "场景插画载入中"; position: absolute; inset: 0; display: grid; place-items: center; background: #53675c; }
 .scene-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,20,15,.28), transparent 28%, rgba(12,24,20,.84) 100%); }
@@ -220,7 +220,7 @@ dialog { color: var(--ink); }
 dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
 .intro-dialog { width: min(calc(100% - 24px), 980px); height: min(calc(100dvh - 24px), 700px); padding: 0; overflow: hidden; border: 0; border-radius: 28px; background: var(--paper); box-shadow: 0 35px 120px rgba(0,0,0,.4); }
 .intro-dialog[open] { display: grid; grid-template-columns: 1.08fr .92fr; }
-.intro-art { background: linear-gradient(180deg, transparent 58%, rgba(20,34,29,.24)), url("assets/generated/intro-memory-trunk-v1.png") center 58%/cover; }
+.intro-art { background: linear-gradient(180deg, transparent 58%, rgba(20,34,29,.24)), url("assets/optimized/intro-memory-trunk-v1.jpg") center 58%/cover; }
 .intro-copy { min-width: 0; display: flex; flex-direction: column; justify-content: center; padding: clamp(28px,5vw,58px); overflow-wrap: anywhere; }
 .intro-copy > p:not(.label) { margin-top: 15px; color: var(--muted); font: 400 15px/1.75 "Noto Serif SC", serif; }
 .intro-copy .primary-button { margin-top: 28px; }
@@ -234,10 +234,12 @@ dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
 .collection-progress strong { color: var(--wine); }
 .album-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 11px; margin-top: 20px; }
 .album .postcard { display: grid; grid-template-columns: 130px 1fr; min-height: 132px; overflow: hidden; border: 1px solid var(--line); border-radius: 17px; background: var(--cream); }
-.postcard-image { background: linear-gradient(140deg,var(--sage),#455f54); background-size: cover; background-position: center; }
+.postcard-image { width: 100%; height: 100%; object-fit: cover; background: linear-gradient(140deg,var(--sage),#455f54); background-size: cover; background-position: center; }
 .album .postcard-copy { padding: 17px; }
 .album .postcard-copy strong { display: block; margin: 4px 0 7px; font: 600 16px/1.35 "Noto Serif SC", serif; }
 .album .postcard-copy p { color: var(--muted); font-size: 13px; line-height: 1.55; }
+.memory-open-button, .memory-flip-button { margin-top: 13px; padding: 0; border: 0; color: var(--wine); background: transparent; font-size: 12px; font-weight: 800; text-align: left; cursor: pointer; }
+.memory-open-button::after, .memory-flip-button::after { content: " ↗"; }
 .album-empty { grid-column: 1/-1; padding: 50px 20px; color: var(--muted); text-align: center; }
 .fragment-heading { margin: 28px 0 12px; padding-top: 22px; border-top: 1px solid var(--line); }
 .fragment-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 9px; }
@@ -257,7 +259,7 @@ dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
 .shop-item button:disabled { color: var(--muted); background: #e2ddd2; }
 .finale-panel { min-height: 200px; margin-top: 28px; padding: 24px; border: 1px dashed var(--line); border-radius: 19px; display: grid; align-content: end; background: linear-gradient(140deg,rgba(169,186,168,.25),var(--cream)); }
 .finale-panel p:last-child { margin-top: 7px; color: var(--muted); line-height: 1.55; }
-.finale-panel.unlocked { min-height: 280px; color: white; border: 0; background: linear-gradient(180deg,transparent,rgba(20,34,29,.84)),url("assets/generated/final-invitation-v1.png") center/cover; }
+.finale-panel.unlocked { min-height: 280px; color: white; border: 0; background: linear-gradient(180deg,transparent,rgba(20,34,29,.84)),url("assets/optimized/final-invitation-v1.jpg") center/cover; }
 .finale-panel.unlocked p:last-child { color: rgba(255,255,255,.8); }
 .finale-panel .primary-button { margin-top: 17px; }
 .reset-progress-zone { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 28px; padding: 18px; border: 1px solid rgba(143,63,73,.2); border-radius: 17px; background: rgba(255,250,240,.58); }
@@ -267,7 +269,7 @@ dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
 .reset-progress-zone button.armed { color: white; background: var(--wine); }
 
 .invite-dialog { width: min(100% - 24px,920px); padding: 0; overflow: hidden; border: 0; border-radius: 26px; color: white; background: #1f312b; box-shadow: var(--shadow); }
-.invite-art { min-height: 70vh; background: linear-gradient(90deg,rgba(16,28,23,.1),rgba(16,28,23,.84)),url("assets/generated/final-invitation-v1.png") center/cover; }
+.invite-art { min-height: 70vh; background: linear-gradient(90deg,rgba(16,28,23,.1),rgba(16,28,23,.84)),url("assets/optimized/final-invitation-v1.jpg") center/cover; }
 .invite-copy { position: absolute; right: clamp(24px,5vw,54px); top: 50%; width: min(42%,360px); transform: translateY(-50%); }
 .invite-copy > p:not(.label) { margin-top: 14px; color: rgba(255,255,255,.82); font: 400 15px/1.75 "Noto Serif SC", serif; }
 .invite-copy small { display: block; min-height: 20px; margin-top: 9px; color: rgba(255,255,255,.7); }
@@ -276,11 +278,24 @@ dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
 .postcard-dialog { width: min(100% - 20px,820px); padding: 0; overflow: hidden; border: 0; border-radius: 26px; background: var(--paper); box-shadow: 0 35px 120px rgba(0,0,0,.38); }
 .mail-arrival { min-height: 520px; display: grid; place-items: center; align-content: center; padding: 34px; text-align: center; background: radial-gradient(circle at 50% 42%,rgba(200,154,80,.18),transparent 18rem),var(--paper); }
 .mail-arrival > p:last-child { margin-top: 9px; color: var(--muted); }
-.sealed-envelope { position: relative; width: 250px; height: 180px; margin: 20px 0 22px; padding: 0; border: 0; background: transparent url("assets/generated/postcard-envelope-v1.png") center/contain no-repeat; cursor: pointer; filter: drop-shadow(0 22px 24px rgba(64,44,25,.22)); transition: transform .25s ease; }
+.sealed-envelope { position: relative; width: 250px; height: 180px; margin: 20px 0 22px; padding: 0; border: 0; background: transparent url("assets/optimized/postcard-envelope-v1.jpg") center/contain no-repeat; cursor: pointer; filter: drop-shadow(0 22px 24px rgba(64,44,25,.22)); transition: transform .25s ease; }
 .sealed-envelope:hover { transform: translateY(-5px) rotate(-1deg); }
 .envelope-flap, .wax-seal { display: none; }
 .postcard-reveal { display: grid; grid-template-columns: 1.25fr .75fr; min-height: 540px; background: var(--cream); animation: postcard-in .48s cubic-bezier(.2,.8,.2,1); }
+.postcard-memory-stage { min-width: 0; min-height: 540px; perspective: 1400px; background: #25352f; }
+.postcard-memory-card { position: relative; width: 100%; height: 100%; min-height: 540px; transform-style: preserve-3d; transition: transform .72s cubic-bezier(.2,.72,.2,1); }
+.postcard-memory-card.is-flipped { transform: rotateY(180deg); }
+.postcard-memory-face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .postcard-reveal-art { min-height: 540px; background-position: center; background-size: cover; }
+.postcard-memory-photo, .postcard-memory-note { transform: rotateY(180deg); }
+.postcard-memory-photo { display: grid; place-items: center; isolation: isolate; background: #26352f; }
+.postcard-memory-photo::before { content: ""; position: absolute; z-index: -2; inset: -24px; background: var(--memory-photo) center/cover no-repeat; filter: blur(22px) saturate(.82); opacity: .72; }
+.postcard-memory-photo::after { content: ""; position: absolute; z-index: -1; inset: 0; background: rgba(19,31,27,.28); }
+.postcard-memory-photo img { position: relative; display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 14px 28px rgba(0,0,0,.24)); }
+.photo-caption { position: absolute; left: 16px; bottom: 16px; padding: 7px 10px; border-radius: 999px; color: white; background: rgba(20,34,29,.68); backdrop-filter: blur(7px); font-size: 11px; }
+.postcard-memory-note { display: grid; align-content: center; gap: 18px; padding: clamp(34px,7vw,72px); color: #3d332b; background: linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,.28)), repeating-linear-gradient(0deg,#eee3ca 0,#eee3ca 31px,#dfd1b2 32px); }
+.postcard-memory-note::before { content: ""; position: absolute; inset: 18px; border: 1px solid rgba(101,76,47,.25); pointer-events: none; }
+.postcard-memory-note p { position: relative; font: 500 clamp(22px,3.5vw,34px)/1.7 "Noto Serif SC",serif; }
 .postcard-reveal-copy { display: flex; flex-direction: column; justify-content: center; padding: 36px; }
 .postcard-reveal-copy > p { margin-top: 14px; color: var(--muted); font: 400 15px/1.75 "Noto Serif SC", serif; }
 .postcard-reveal-copy .primary-button { margin-top: 24px; }
@@ -336,13 +351,13 @@ dialog::backdrop { background: rgba(12,24,20,.76); backdrop-filter: blur(8px); }
   .shop-item button { grid-column: 1/-1; width: 100%; }
   .reset-progress-zone { align-items: stretch; flex-direction: column; }
   .reset-progress-zone button { width: 100%; min-height: 44px; }
-  .invite-art { min-height: 78vh; background: linear-gradient(180deg,rgba(16,28,23,.04) 25%,rgba(16,28,23,.92) 72%),url("assets/generated/final-invitation-v1.png") 42% center/cover; }
+  .invite-art { min-height: 78vh; background: linear-gradient(180deg,rgba(16,28,23,.04) 25%,rgba(16,28,23,.92) 72%),url("assets/optimized/final-invitation-v1.jpg") 42% center/cover; }
   .invite-copy { left: 22px; right: 22px; top: auto; bottom: 24px; width: auto; transform: none; }
   .invite-copy h2 { font-size: 29px; }
   .postcard-dialog { width: calc(100% - 12px); max-height: calc(100dvh - 12px); border-radius: 20px; }
   .mail-arrival { min-height: calc(100dvh - 12px); padding: 24px 18px; }
   .postcard-reveal { grid-template-columns: 1fr; min-height: calc(100dvh - 12px); }
-  .postcard-reveal-art { min-height: 53dvh; }
+  .postcard-memory-stage, .postcard-memory-card, .postcard-reveal-art { min-height: 53dvh; }
   .postcard-reveal-copy { min-height: 37dvh; padding: 22px; justify-content: flex-start; }
   .postcard-reveal-copy .primary-button { margin-top: auto; }
 }

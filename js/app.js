@@ -45,9 +45,11 @@
   function loadState() {
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey)) || { album: [], fragments: {} };
-      saved.album ||= [];
+      const validMemoryIds = new Set(data.memories.map(memory => memory.id));
+      saved.album = (saved.album || []).filter(id => validMemoryIds.has(id));
       saved.fragments ||= {};
       saved.unlockedItems ||= [];
+      saved.recentMemoryIds = (saved.recentMemoryIds || []).filter(id => validMemoryIds.has(id)).slice(-10);
       saved.unlockedItems = [...new Set(saved.unlockedItems.map(id => itemAliases[id] || id))];
       saved.discoveredFragments ||= Object.keys(saved.fragments).filter(id => saved.fragments[id] > 0);
       if (saved.trip && !saved.trip.fragmentId) {
@@ -60,6 +62,15 @@
         saved.trip.cocktailId = cocktailAliases[saved.trip.cocktailId] || saved.trip.cocktailId;
         saved.trip.openedPostcards ||= [...(saved.trip.collected || [])];
         saved.trip.announcedPostcards ||= [...saved.trip.openedPostcards];
+        const keptMemoryIds = (saved.trip.memoryIds || []).filter(id => validMemoryIds.has(id));
+        const replacements = data.memories
+          .map(memory => memory.id)
+          .filter(id => !keptMemoryIds.includes(id))
+          .slice(0, Math.max(0, 2 - keptMemoryIds.length));
+        saved.trip.memoryIds = [...keptMemoryIds, ...replacements].slice(0, 2);
+        saved.trip.openedPostcards = saved.trip.openedPostcards.filter(id => saved.trip.memoryIds.includes(id));
+        saved.trip.announcedPostcards = saved.trip.announcedPostcards.filter(id => saved.trip.memoryIds.includes(id));
+        saved.trip.collected = (saved.trip.collected || []).filter(id => saved.trip.memoryIds.includes(id));
       }
       return saved;
     }
@@ -67,6 +78,21 @@
   }
 
   function saveState() { localStorage.setItem(storageKey, JSON.stringify(state)); }
+
+  function displayArt(path) {
+    return path.startsWith("assets/generated/")
+      ? path.replace("assets/generated/", "assets/optimized/").replace(/\.png$/, ".jpg")
+      : path;
+  }
+
+  function preloadMemories(ids) {
+    ids.forEach(id => {
+      const memory = data.memories.find(item => item.id === id);
+      if (!memory) return;
+      const image = new Image();
+      image.src = displayArt(memory.art);
+    });
+  }
 
   function formatLocation(memory) {
     return locationLabels[memory.city] || memory.city;
@@ -202,7 +228,14 @@
 
   function weightedPick(tags, excluded = []) {
     const pool = data.memories.filter(memory => !excluded.includes(memory.id));
-    const weighted = pool.map(memory => ({ memory, score: 1 + memory.tags.filter(tag => tags.includes(tag)).length * 4 + (memory.tags.includes("rare") ? Math.random() * 2 : 0) }));
+    const recent = new Set(state.recentMemoryIds || []);
+    const collected = new Set(state.album || []);
+    const weighted = pool.map(memory => {
+      const base = 1 + memory.tags.filter(tag => tags.includes(tag)).length * 4 + (memory.tags.includes("rare") ? Math.random() * 2 : 0);
+      const recentFactor = recent.has(memory.id) ? .12 : 1;
+      const discoveryFactor = collected.has(memory.id) ? 1 : 1.35;
+      return { memory, score: base * recentFactor * discoveryFactor };
+    });
     const total = weighted.reduce((sum, item) => sum + item.score, 0);
     let cursor = Math.random() * total;
     for (const item of weighted) {
@@ -248,7 +281,9 @@
       memoryIds: [first.id, second.id], fragmentId: fragment.id, noteId: note.id,
       collected: [], openedPostcards: [], announcedPostcards: [], rewardClaimed: false
     };
+    state.recentMemoryIds = [...(state.recentMemoryIds || []), first.id, second.id].slice(-10);
     saveState();
+    preloadMemories(state.trip.memoryIds);
     render();
   }
 
@@ -309,7 +344,7 @@
       const role = `第 ${index + 1} 张明信片`;
       return isOpened ? `
         <article class="postcard">
-          <div class="postcard-image" style="background-image:url('${memory.art}')"></div>
+          <div class="postcard-image" style="background-image:url('${displayArt(memory.art)}')"></div>
           <div class="postcard-copy"><span class="label">${formatLocation(memory)} · ${role}</span><strong>${memory.title}</strong><p>${memory.text}</p></div>
         </article>` : hasArrived ? `
         <article class="postcard arrived-card">
@@ -377,21 +412,51 @@
     if (!state.trip.openedPostcards.includes(memoryId)) state.trip.openedPostcards.push(memoryId);
     collectUnlocked(tripProgress());
     renderAlbum();
+    renderPostcardDetail(memory, "收进回忆册");
+    renderTrip();
+  }
+
+  function renderPostcardDetail(memory, closeLabel = "合上明信片") {
+    const hasBack = Boolean(memory.photo || memory.photoNote);
+    const back = memory.photo
+      ? `<div class="postcard-memory-face postcard-memory-photo" style="--memory-photo:url('${memory.photo}')">
+          <img src="${memory.photo}" alt="${memory.title}那一天的真实照片">
+          <span class="photo-caption">那一天的真实照片</span>
+        </div>`
+      : memory.photoNote
+        ? `<div class="postcard-memory-face postcard-memory-note">
+            <span class="label">NO PHOTOGRAPH</span>
+            <p>${memory.photoNote}</p>
+          </div>`
+        : "";
     elements.postcardDialogContent.innerHTML = `
       <article class="postcard-reveal">
-        <div class="postcard-reveal-art" style="background-image:url('${memory.art}')"></div>
+        <div class="postcard-memory-stage">
+          <div class="postcard-memory-card" data-memory-card>
+            <div class="postcard-memory-face postcard-reveal-art" style="background-image:url('${displayArt(memory.art)}')"></div>
+            ${back}
+          </div>
+        </div>
         <div class="postcard-reveal-copy">
           <span class="label">${formatLocation(memory)} · FROM THE ROAD</span>
           <h2>${memory.title}</h2><p>${memory.text}</p>
-          <button class="primary-button" data-close-postcard>收进回忆册</button>
+          ${hasBack ? `<button class="memory-flip-button" data-flip-postcard aria-pressed="false">翻到那一天</button>` : ""}
+          <button class="primary-button" data-close-postcard>${closeLabel}</button>
         </div>
       </article>`;
-    renderTrip();
   }
 
   function handlePostcardDialog(event) {
     const reveal = event.target.closest("[data-reveal-postcard]");
     if (reveal) return revealPostcard(reveal.dataset.revealPostcard);
+    const flip = event.target.closest("[data-flip-postcard]");
+    if (flip) {
+      const card = elements.postcardDialogContent.querySelector("[data-memory-card]");
+      const flipped = card.classList.toggle("is-flipped");
+      flip.setAttribute("aria-pressed", String(flipped));
+      flip.textContent = flipped ? "回到插画" : "翻到那一天";
+      return;
+    }
     if (event.target.closest("[data-close-postcard]")) {
       elements.postcardDialog.close();
       setTimeout(() => checkPostcardArrivals(), 220);
@@ -413,8 +478,10 @@
       <div><span>已收藏的明信片记忆</span><strong>${memories.length}/${data.memories.length}</strong></div>`;
     elements.albumGrid.innerHTML = memories.length ? memories.map(memory => `
       <article class="postcard">
-        <div class="postcard-image" style="background-image:url('${memory.art}')"></div>
-        <div class="postcard-copy"><span class="label">${formatLocation(memory)}</span><strong>${memory.title}</strong><p>${memory.text}</p></div>
+        <img class="postcard-image" src="${displayArt(memory.art)}" alt="" loading="lazy" decoding="async">
+        <div class="postcard-copy"><span class="label">${formatLocation(memory)}</span><strong>${memory.title}</strong><p>${memory.text}</p>
+          <button class="memory-open-button" data-open-memory="${memory.id}">${memory.photo || memory.photoNote ? "翻看这段回忆" : "查看明信片"}</button>
+        </div>
       </article>`).join("") : `<p class="album-empty">还没有收到明信片。先送小狗出一次门吧。</p>`;
     elements.fragmentGrid.innerHTML = data.fragments.map(fragment => {
       const count = state.fragments?.[fragment.id] || 0;
@@ -444,6 +511,16 @@
       <div><p class="label">A NEW PAGE</p><h3>小狗留了一张没有目的地的票</h3><p>这次不回头看旧照片了。去看看下一段会发生什么。</p></div>
       <button class="primary-button" data-open-invite>打开同行邀请</button>` : `
       <div><p class="label">LOCKED PAGE</p><h3>回忆册的最后一页还没打开</h3><p>收集 ${requirements.memories} 张明信片和 ${requirements.fragmentKinds} 种碎片后，小狗会把压在箱底的信交给你。</p></div>`;
+  }
+
+  function openAlbumMemory(event) {
+    const button = event.target.closest("[data-open-memory]");
+    if (!button) return;
+    const memory = data.memories.find(item => item.id === button.dataset.openMemory);
+    if (!memory) return;
+    elements.albumDialog.close();
+    renderPostcardDetail(memory);
+    elements.postcardDialog.showModal();
   }
 
   function openInvite(event) {
@@ -523,7 +600,7 @@
     const image = new Image();
     image.onload = () => elements.art.classList.remove("no-art");
     image.onerror = () => elements.art.classList.add("no-art");
-    image.src = "assets/generated/home-room-v1.png";
+    image.src = "assets/optimized/home-room-v1.jpg";
   }
 
   function render() {
@@ -552,6 +629,7 @@
   elements.depart.addEventListener("click", beginJourney);
   $("resetButton").addEventListener("click", resetTrip);
   elements.albumButton.addEventListener("click", () => { renderAlbum(); elements.albumDialog.showModal(); });
+  elements.albumGrid.addEventListener("click", openAlbumMemory);
   $("closeAlbum").addEventListener("click", () => { disarmFullReset(); elements.albumDialog.close(); });
   $("resetAllButton").addEventListener("click", resetAllProgress);
   elements.shopGrid.addEventListener("click", unlockItem);
